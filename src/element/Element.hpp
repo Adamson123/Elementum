@@ -10,35 +10,32 @@ class Element
 {
 public:
     Element(float x, float y, float width, float height);
-    // virtual ~Element() = default;
+    virtual ~Element() = default;
 
     Element *parent = nullptr;
 
-    float x = 0;
-    float y = 0;
-
-    float width = 0;
-    float height = 0;
+    float x, y, width, height;
 
     Style style;
-    string id;
-    string className;
-    string text;
-
-    vector<unique_ptr<Element>> children;
+    string id, className, text;
 
     void render(SDL_Renderer *renderer);
 
     void addChild(unique_ptr<Element> child);
     // void addManyChild(initializer_list<unique_ptr<Element>> manyChild);
-    template <typename... Args>
-    void addManyChild(Args &&...args)
+    template <class T, class... Args>
+    T *emplaceChild(Args &&...args)
     {
-        (addChild(std::forward<Args>(args)), ...);
+        static_assert(std::is_base_of_v<Element, T>, "T must derive from Element");
+        auto ptr = std::make_unique<T>(std::forward<Args>(args)...);
+        ptr->parent = this;
+        T *raw = ptr.get();
+        children.push_back(std::move(ptr));
+        return raw;
     }
     Element *getChild(int index);
-    Element *getChildByClassName(string className);
-    Element *getChildByID(string id);
+    // Element *getChildByClassName(string className);
+    // Element *getChildByID(string id);
     vector<Element *> getSortedChildren();
 
     void listenToWindowClick(int mouseX, int mouseY);
@@ -47,5 +44,7 @@ public:
 
     bool isInside(int mouseX, int mouseY);
     bool isInsideElement(int mouseX, int mouseY, Element *element);
-    virtual void assignToClickedElement(int mouseX, int mouseY);
+
+protected:
+    vector<unique_ptr<Element>> children;
 };

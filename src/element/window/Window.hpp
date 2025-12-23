@@ -2,6 +2,11 @@
 #include "../Element.hpp"
 #include "../rectangle/Rectangle.hpp"
 
+#pragma once
+#include "../Element.hpp"
+
+class Rectangle;
+
 class Window : public Element
 {
 public:
@@ -9,6 +14,6 @@ public:
 
     Element *clickedElement;
 
-    unique_ptr<Rectangle> createRectangle();
-    unique_ptr<Rectangle> createRectangle(int x, int y, int width, int height);
+    Rectangle *createRectangle();
+    Rectangle *createRectangle(int x, int y, int width, int height);
 };
