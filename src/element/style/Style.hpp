@@ -3,19 +3,22 @@
 
 using namespace std;
 
-struct Color
+struct BackgroundColor
 {
     int r;
     int g;
     int b;
     int a;
 
-    Color(int r, int g, int b, int a) : r(r), g(g), b(b), a(a) {};
+    BackgroundColor(int r, int g, int b, int a) : r(r), g(g), b(b), a(a) {};
 };
 
 class Style
 {
 public:
-    Color color = {0, 0, 0, 0};
+    BackgroundColor backgroundColor = {0, 0, 0, 0};
+    SDL_Color color = {255, 255, 255, 255};
+    string fontFamily = "fonts/arial.ttf";
+    int fontSize = 25;
     int zIndex = 0;
 };

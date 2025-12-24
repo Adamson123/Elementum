@@ -2,10 +2,18 @@
 #include <iostream>
 #include "Element.hpp"
 #include <memory>
+#include "../Constants.h"
 
 using namespace std;
+using namespace Constants;
 
-Element::Element(float x, float y, float width, float height) : x(x), y(y), width(width), height(height) {};
+Element::Element(float x, float y, float width, float height) : x(x), y(y), width(width), height(height)
+{
+    initialX = x;
+    initialY = y;
+    initialWidth = width;
+    initialHeight = height;
+};
 
 vector<Element *> Element::getSortedChildren()
 {
@@ -28,8 +36,10 @@ vector<Element *> Element::getSortedChildren()
 void Element::render(SDL_Renderer *renderer)
 {
     SDL_FRect rect = {x, y, width, height};
-    SDL_SetRenderDrawColor(renderer, style.color.r, style.color.g, style.color.b, style.color.a);
+    SDL_SetRenderDrawColor(renderer, style.backgroundColor.r, style.backgroundColor.g, style.backgroundColor.b, style.backgroundColor.a);
     SDL_RenderFillRectF(renderer, &rect);
+
+    renderText(renderer);
 
     if (children.size() > 0)
     {
@@ -42,27 +52,48 @@ void Element::render(SDL_Renderer *renderer)
     }
 }
 
+void Element::renderText(SDL_Renderer *renderer)
+{
+    if (text.empty())
+        return;
+
+    font = fontManager->get(style.fontFamily, style.fontSize);
+
+    // 1️⃣ Render text to surface
+    SDL_Surface *surface = TTF_RenderText_Solid(font, text.c_str(), style.color);
+    if (!surface)
+    {
+        std::cout << "Surface error: " << TTF_GetError() << std::endl;
+        return;
+    }
+
+    // 2️⃣ Convert surface to texture
+    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
+    SDL_FreeSurface(surface);
+    if (!texture)
+    {
+        std::cout << "Texture error: " << SDL_GetError() << std::endl;
+        return;
+    }
+
+    // 3️⃣ Query texture size
+    SDL_Rect dstRect;
+    dstRect.x = x;
+    dstRect.y = y;
+    SDL_QueryTexture(texture, nullptr, nullptr, &dstRect.w, &dstRect.h);
+
+    // 4️⃣ Copy texture to renderer
+    SDL_RenderCopy(renderer, texture, nullptr, &dstRect);
+
+    // 5️⃣ Cleanup texture
+    SDL_DestroyTexture(texture);
+}
+
 void Element::addChild(unique_ptr<Element> child)
 {
     child->parent = this;
     children.push_back(std::move(child));
 }
-
-// void Element::addManyChild(initializer_list<unique_ptr<Element>> manyChild)
-// {
-//     if (manyChild.size())
-//         for (auto &child : manyChild)
-//         {
-//             child->parent = this;
-//             children.push_back(std::move(child));
-//         }
-// }
-
-// template <typename... Args>
-// void Element::addManyChild(Args &&...args)
-// {
-//     (addChild(std::forward<Args>(args)), ...); // fold expression
-// }
 
 Element *Element::getChild(int index)
 {
@@ -76,6 +107,26 @@ void Element::click(int mouseX, int mouseY)
 {
     if (onClick)
         onClick();
+}
+
+void Element::handleResize(float newWidth, float newHeight)
+{
+    float percentageWidth = initialWidth / WINDOW_WIDTH;
+    float percentageHeight = initialHeight / WINDOW_HEIGHT;
+    float percentageX = initialX / WINDOW_WIDTH;
+    float percentageY = initialY / WINDOW_HEIGHT;
+
+    width = percentageWidth * newWidth;
+    height = percentageHeight * newHeight;
+    x = percentageX * newWidth;
+    y = percentageY * newHeight;
+
+    // SDL_Log("%fx%f", percentageWidth, percentageHeight);
+    if (children.size())
+        for (auto &child : children)
+        {
+            child->handleResize(newWidth, newHeight);
+        }
 }
 
 bool Element::isInside(int mouseX, int mouseY)

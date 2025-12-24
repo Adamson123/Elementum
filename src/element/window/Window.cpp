@@ -12,6 +12,8 @@ unique_ptr<Widget> Window::createWidget()
 {
     auto widget = make_unique<Widget>(0, 0, 0, 0);
     widget->window = this;
+    // widget->setFontSize(widget->parent ? widget->parent->style.fontSize : 12);
+    widget->fontManager = fontManager;
     return std::move(widget);
 }
 
@@ -19,6 +21,8 @@ unique_ptr<Widget> Window::createWidget(float x, float y, float width, float hei
 {
     auto widget = make_unique<Widget>(x, y, width, height);
     widget->window = this;
+    // widget->setFontSize(widget->parent ? widget->parent->style.fontSize : 12);
+    widget->fontManager = fontManager;
     return std::move(widget);
 }
 
