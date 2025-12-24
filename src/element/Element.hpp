@@ -6,6 +6,9 @@
 #include <vector>
 #include <utility>
 
+class Window;
+class Rectangle;
+
 class Element
 {
 public:
@@ -14,37 +17,29 @@ public:
 
     Element *parent = nullptr;
 
-    float x, y, width, height;
+    float x = 0, y = 0, width = 0, height = 0;
 
     Style style;
     string id, className, text;
 
+    vector<unique_ptr<Element>> children;
+    vector<Element *> getSortedChildren();
+
     void render(SDL_Renderer *renderer);
 
     void addChild(unique_ptr<Element> child);
-    // void addManyChild(initializer_list<unique_ptr<Element>> manyChild);
-    template <class T, class... Args>
-    T *emplaceChild(Args &&...args)
+    template <typename... Args>
+    void addManyChild(Args &&...args)
     {
-        static_assert(std::is_base_of_v<Element, T>, "T must derive from Element");
-        auto ptr = std::make_unique<T>(std::forward<Args>(args)...);
-        ptr->parent = this;
-        T *raw = ptr.get();
-        children.push_back(std::move(ptr));
-        return raw;
+        (addChild(std::forward<Args>(args)), ...);
     }
-    Element *getChild(int index);
-    // Element *getChildByClassName(string className);
-    // Element *getChildByID(string id);
-    vector<Element *> getSortedChildren();
+    Element *getChild(int index),
+        *getChildByClassName(string className),
+        *getChildByID(string id);
 
-    void listenToWindowClick(int mouseX, int mouseY);
     void click(int mouseX, int mouseY);
-    function<void()> onClick;
+    function<void()> onClick = nullptr;
 
     bool isInside(int mouseX, int mouseY);
     bool isInsideElement(int mouseX, int mouseY, Element *element);
-
-protected:
-    vector<unique_ptr<Element>> children;
 };

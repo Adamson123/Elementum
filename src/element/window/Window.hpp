@@ -1,19 +1,18 @@
 #pragma once
 #include "../Element.hpp"
-#include "../rectangle/Rectangle.hpp"
+#include "../widget/Widget.hpp"
 
-#pragma once
-#include "../Element.hpp"
-
-class Rectangle;
+class Widget;
 
 class Window : public Element
 {
 public:
     Window(float x, float y, float width, float height);
 
-    Element *clickedElement;
+    Element *clickedElement = nullptr;
 
-    Rectangle *createRectangle();
-    Rectangle *createRectangle(int x, int y, int width, int height);
+    unique_ptr<Widget> createWidget();
+    unique_ptr<Widget> createWidget(float x, float y, float width, float height);
+
+    void handleClickWithIn(float mouseX, float mouseY);
 };

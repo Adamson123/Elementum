@@ -1,36 +1,52 @@
-#include "Window.hpp"
 #include <memory>
+#include <iostream>
+#include "Window.hpp"
 #include "../Element.hpp"
-#include "../rectangle/Rectangle.hpp"
+#include "../widget/Widget.hpp"
 
 using namespace std;
 
 Window::Window(float x, float y, float width, float height) : Element(x, y, width, height) {}
 
-// unique_ptr<Rectangle> Window::createRectangle()
-// {
-//     auto rectangle = make_unique<Rectangle>(0, 0, 0, 0);
-//     rectangle->window = this;
-//     return std::move(rectangle);
-// }
-
-// unique_ptr<Rectangle> Window::createRectangle(int x, int y, int width, int height)
-// {
-//     auto rectangle = make_unique<Rectangle>(x, y, width, height);
-//     rectangle->window = this;
-//     return std::move(rectangle);
-// }
-
-Rectangle *Window::createRectangle()
+unique_ptr<Widget> Window::createWidget()
 {
-    auto *rect = this->emplaceChild<Rectangle>(0, 0, 0, 0);
-    rect->window = this;
-    return rect;
+    auto widget = make_unique<Widget>(0, 0, 0, 0);
+    widget->window = this;
+    return std::move(widget);
 }
 
-Rectangle *Window::createRectangle(int x, int y, int width, int height)
+unique_ptr<Widget> Window::createWidget(float x, float y, float width, float height)
 {
-    auto *rect = this->emplaceChild<Rectangle>(x, y, width, height);
-    rect->window = this;
-    return rect;
+    auto widget = make_unique<Widget>(x, y, width, height);
+    widget->window = this;
+    return std::move(widget);
+}
+
+void Window::handleClickWithIn(float mouseX, float mouseY)
+{
+    vector<Element *> sortedChildren = getSortedChildren();
+
+    for (auto &child : sortedChildren)
+    {
+        if (auto widget = dynamic_cast<Widget *>(child))
+        {
+            widget->assignToClickedElement(mouseX, mouseY);
+        }
+    }
+
+    if (clickedElement)
+    {
+        cout << "From " + clickedElement->className << endl;
+        if (auto clickedWidget = dynamic_cast<Widget *>(clickedElement))
+        {
+            clickedWidget->propagateClick();
+        }
+        clickedElement = nullptr;
+    }
+    else
+    {
+        cout << "No Widgets were clicked" << endl;
+        if (onClick)
+            onClick();
+    }
 }

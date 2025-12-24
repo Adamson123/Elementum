@@ -27,7 +27,6 @@ vector<Element *> Element::getSortedChildren()
 
 void Element::render(SDL_Renderer *renderer)
 {
-
     SDL_FRect rect = {x, y, width, height};
     SDL_SetRenderDrawColor(renderer, style.color.r, style.color.g, style.color.b, style.color.a);
     SDL_RenderFillRectF(renderer, &rect);
@@ -71,15 +70,6 @@ Element *Element::getChild(int index)
         return nullptr;
 
     return children[index].get();
-}
-
-void Element::listenToWindowClick(int mouseX, int mouseY)
-{
-    if (isInside(mouseX, mouseY))
-    {
-        if (onClick)
-            onClick();
-    }
 }
 
 void Element::click(int mouseX, int mouseY)

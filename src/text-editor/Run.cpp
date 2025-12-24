@@ -2,9 +2,9 @@
 #include "TextEditor.hpp"
 #include "../element/Element.hpp"
 #include "../element/window/Window.hpp"
+#include "../element/widget/Widget.hpp"
 #include "../Constants.h"
 #include <memory>
-// #include <format>
 
 using namespace std;
 using namespace Constants;
@@ -15,62 +15,52 @@ Window window(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 void TextEditor::Init()
 {
 
-    // window.className = "rt5";
+    window.className = "Window____";
 
-    // auto element = window.createRectangle(0, 0, 200, WINDOW_HEIGHT);
-    // element->style.color = {122, 66, 66, 255};
-
-    // auto element2 = window.createRectangle(150, 190, 200, 200);
-    // element2->style.color = {21, 166, 66, 255};
-
-    // auto elementChild = window.createRectangle(150, 190, 300, 50);
-    // elementChild->style.color = {0, 0, 0, 255};
-
-    // element->style.zIndex = 1;
-
-    // element->addChild(std::move(elementChild));
-
-    // {
-    //     window.addManyChild(std::move(element),
-    //                         std::move(element2),
-    //                         make_unique<Element>(280, 190, 200, 200));
-    // }
-
-    auto *element = window.createRectangle(0, 0, 200, WINDOW_HEIGHT);
+    auto element = window.createWidget(0, 0, 200, WINDOW_HEIGHT);
     element->style.color = {122, 66, 66, 255};
-    element->style.zIndex = 1;
+    element->className = "brown";
 
-    auto *element2 = window.createRectangle(150, 190, 200, 200);
+    auto element2 = window.createWidget(150, 190, 200, 200);
     element2->style.color = {21, 166, 66, 255};
+    element2->className = "green";
 
-    // auto *elementChild = window.createRectangle(150, 190, 300, 50);
-    // elementChild->style.color = {0, 0, 0, 255};
+    auto element3 = window.createWidget(280, 190, 200, 200);
 
-    // If you want elementChild to become a child of `element`, you must TRANSFER ownership.
-    // With current API, elementChild is owned by `window`. So create the child under element instead:
+    auto elementChild = window.createWidget(150, 190, 300, 350);
+    elementChild->style.color = {0, 0, 0, 255};
+    elementChild->className = "black";
 
-    // remove the above elementChild creation and do:
-    // auto* elementChild = element->emplaceChild<Rectangle>(150, 190, 300, 50);
+    auto elementChildChild = window.createWidget(150, 250, 200, 200);
+    elementChildChild->style.color = {23, 244, 255, 255};
+    elementChildChild->className = "Child child";
+    elementChildChild->style.zIndex = 10;
 
-    // Example (do this instead of window.createRectangle for the child):
-    auto *elementChild2 = element->emplaceChild<Rectangle>(150, 190, 300, 50);
-    elementChild2->window = &window;
-    elementChild2->style.color = {0, 0, 0, 255};
+    // Use transform to Widget function in the future
+    auto elementChildWidget = dynamic_cast<Widget *>(elementChildChild.get());
+    elementChildWidget->isPropagateClick = false;
 
-    // If you want a plain Element:
-    window.emplaceChild<Element>(280, 190, 200, 200);
+    element->style.zIndex = 3;
+
+    {
+        elementChild->addChild(std::move(elementChildChild));
+        element->addChild(std::move(elementChild));
+
+        window.addManyChild(std::move(element),
+                            std::move(element2),
+                            std::move(element3));
+    }
 }
 
 void TextEditor::ListenToEvent(SDL_Event *event)
 {
-    // if (event->type == SDL_MOUSEBUTTONDOWN)
-    // {
-    //     float x = event->button.x;
-    //     float y = event->button.y;
+    if (event->type == SDL_MOUSEBUTTONDOWN)
+    {
+        float x = event->button.x;
+        float y = event->button.y;
 
-    //     element.listenToWindowClick(x, y);
-    //     // cout << "was clicked" << endl;
-    // }
+        window.handleClickWithIn(x, y);
+    }
 }
 
 // Runs every frame
@@ -87,9 +77,20 @@ void TextEditor::Run(SDL_Renderer *renderer)
     Element *child3 = window.getChild(2);
     child3->x = 300;
     child3->style.color = {255, 28, 33, 255};
-    child3->style.zIndex = 4;
+    child3->style.zIndex = 2;
+    child3->className = "red";
 
     Element *child = window.getChild(0);
+    child->onClick = [=]()
+    {
+        cout << child->className + " widget function was executed" << endl;
+    };
+
+    window.onClick = [=]()
+    {
+        cout << window.className + " function was executed" << endl;
+    };
+    //  Element *child = window.getChild(0);
 
     // element.onClick = [&]()
     // {
