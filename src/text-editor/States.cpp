@@ -17,38 +17,36 @@ using namespace Constants;
 void TextEditor::Init()
 {
 
-    fontManager = std::make_unique<FontManager>();
-    window = std::make_unique<Window>(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
-    window->style.backgroundColor = {31, 31, 31, 255};
+    window = make_unique<Window>(0, 0, 100, 100);
+    fontManager = make_unique<FontManager>();
+    styleApplier = make_unique<StyleApplier>();
 
     window->fontManager = fontManager.get();
+    window->styleApplier = styleApplier.get();
 
+    window->style.backgroundColor = {31, 31, 31, 255};
     window->className = "Window_";
 
-    auto element = window->createWidget(0, 100, WINDOW_WIDTH, 50);
+    auto element = window->createWidget(0, 0, 100, 50);
     element->style.backgroundColor = {24, 24, 24, 255};
     element->className = "brown";
     element->text = "I am saying helloooo";
     // element->setFontSize(15);
 
-    auto element2 = window->createWidget(150, 190, 200, 200);
-    element2->style.backgroundColor = {21, 166, 66, 255};
-    element2->className = "green";
-
-    auto element3 = window->createWidget(280, 190, 200, 200);
-    element3->style.backgroundColor = {255, 28, 33, 255};
-    element3->style.color = {0, 255, 0, 255};
-    element3->style.zIndex = 2;
-    element3->text = "I am red";
-    element3->style.fontSize = 15;
-
-    auto elementChild = window->createWidget(150, 10, 300, 50);
-    elementChild->style.backgroundColor = {0, 0, 0, 255};
+    auto elementChild = window->createWidget(40, 0, 50, 100);
+    // elementChild->style.backgroundColor = {0, 0, 0, 255};
     elementChild->className = "black";
 
-    // auto elementChildChild = window->createWidget(150, 250, 200, 200);
-    // elementChildChild->style.backgroundColor = {23, 244, 255, 255};
-    // elementChildChild->className = "child_Child";
+    auto elementChildChild = window->createWidget(50, 50, 20, 20);
+    elementChildChild->style.backgroundColor = {23, 244, 255, 255};
+    elementChildChild->className = "child_Child";
+
+    StyleDef InputType = {
+        {"color", "0,255,125,255"}, {"backgroundColor", "255,23,110,0"}};
+
+    element->addStyle(InputType);
+    elementChildChild->addStyle(InputType);
+
     // elementChildChild->style.zIndex = 1;
 
     // Use transform to Widget function in the future
@@ -58,7 +56,7 @@ void TextEditor::Init()
     // element->style.zIndex = 1;
 
     {
-        // elementChild->addChild(std::move(elementChildChild));
+        elementChild->addChild(std::move(elementChildChild));
         element->addChild(std::move(elementChild));
 
         window->addManyChild(std::move(element)
@@ -66,6 +64,7 @@ void TextEditor::Init()
                              // std::move(element3)
         );
     }
+    window->updateLayout(WINDOW_WIDTH, WINDOW_HEIGHT);
 }
 
 void TextEditor::ListenToEvent(SDL_Event *event)

@@ -7,9 +7,11 @@
 #include <utility>
 #include <SDL_ttf.h>
 #include "./FontManager.hpp"
+#include "./style/StyleApplier.hpp"
 
 class Window;
 class Rectangle;
+class StyleApplier;
 
 class Element
 {
@@ -19,11 +21,12 @@ public:
 
     float initialX, initialY, initialWidth, initialHeight;
     float x = 0, y = 0, width = 0, height = 0;
-    // float relativeX, relativeY;
+    float relativeX, relativeY, relativeWidth, relativeHeight;
 
     Element *parent = nullptr;
     TTF_Font *font;
     FontManager *fontManager;
+    StyleApplier *styleApplier;
 
     Style style;
     string id, className, text;
@@ -33,6 +36,10 @@ public:
 
     void render(SDL_Renderer *renderer);
     void renderText(SDL_Renderer *renderer);
+
+    void addStyle(StyleDef &styleDef);
+
+    void updateLayout(float newWindowWidth, float newWindowHeight);
     // void setFontSize(int size);
 
     void addChild(unique_ptr<Element> child);
@@ -50,7 +57,7 @@ public:
     function<void()> onClick = nullptr;
 
     // resize event
-    void handleResize(float newWidth, float newHeight);
+    void handleResize(float newWindowWidth, float newWindowHeight);
 
     bool isInside(int mouseX, int mouseY);
     bool isInsideElement(int mouseX, int mouseY, Element *element);

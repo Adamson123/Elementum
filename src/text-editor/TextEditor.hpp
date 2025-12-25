@@ -4,6 +4,7 @@
 #include <memory>
 #include "../element/window/Window.hpp"
 #include "../element/FontManager.hpp"
+#include "../element/style/StyleApplier.hpp"
 
 using namespace std;
 
@@ -22,4 +23,5 @@ public:
 
     unique_ptr<FontManager> fontManager;
     unique_ptr<Window> window;
+    unique_ptr<StyleApplier> styleApplier;
 };

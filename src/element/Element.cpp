@@ -13,6 +13,10 @@ Element::Element(float x, float y, float width, float height) : x(x), y(y), widt
     initialY = y;
     initialWidth = width;
     initialHeight = height;
+    relativeX = x;
+    relativeY = y;
+    relativeWidth = width;
+    relativeHeight = height;
 };
 
 vector<Element *> Element::getSortedChildren()
@@ -35,7 +39,7 @@ vector<Element *> Element::getSortedChildren()
 
 void Element::render(SDL_Renderer *renderer)
 {
-    SDL_FRect rect = {x, y, width, height};
+    SDL_FRect rect = {relativeX, relativeY, relativeWidth, relativeHeight};
     SDL_SetRenderDrawColor(renderer, style.backgroundColor.r, style.backgroundColor.g, style.backgroundColor.b, style.backgroundColor.a);
     SDL_RenderFillRectF(renderer, &rect);
 
@@ -89,6 +93,37 @@ void Element::renderText(SDL_Renderer *renderer)
     SDL_DestroyTexture(texture);
 }
 
+void Element::updateLayout(float newWindowWidth, float newWindowHeight)
+{
+    if (parent)
+    {
+        relativeX = parent->relativeX + (x / 100) * parent->relativeWidth;
+        relativeY = parent->relativeY + (y / 100) * parent->relativeHeight;
+
+        relativeWidth = (width / 100) * parent->relativeWidth;
+        relativeHeight = (height / 100) * parent->relativeHeight;
+    }
+    else
+    {
+        relativeX = y;
+        relativeY = x;
+
+        relativeWidth = (width / 100) * newWindowWidth;
+        relativeHeight = (height / 100) * newWindowHeight;
+    }
+
+    for (auto &child : children)
+    {
+        child->updateLayout(newWindowWidth, newWindowHeight);
+    }
+    SDL_Log("W: %f x H: %f, %s, my H in 100: %f", relativeWidth, relativeHeight, className.c_str(), height);
+}
+
+void Element::addStyle(StyleDef &styleDef)
+{
+    styleApplier->apply(this, styleDef);
+}
+
 void Element::addChild(unique_ptr<Element> child)
 {
     child->parent = this;
@@ -109,29 +144,33 @@ void Element::click(int mouseX, int mouseY)
         onClick();
 }
 
-void Element::handleResize(float newWidth, float newHeight)
+void Element::handleResize(float newWindowWidth, float newWindowHeight)
 {
-    float percentageWidth = initialWidth / WINDOW_WIDTH;
-    float percentageHeight = initialHeight / WINDOW_HEIGHT;
-    float percentageX = initialX / WINDOW_WIDTH;
-    float percentageY = initialY / WINDOW_HEIGHT;
 
-    width = percentageWidth * newWidth;
-    height = percentageHeight * newHeight;
-    x = percentageX * newWidth;
-    y = percentageY * newHeight;
+    // float parentInitialWidth = parent ? parent->initialWidth : WINDOW_WIDTH;
+    // float parentInitialHeight = parent ? parent->initialHeight : WINDOW_HEIGHT;
+
+    // float percentageWidth = initialWidth / parentInitialWidth;
+    // float percentageHeight = initialHeight / parentInitialHeight;
+
+    // float parentWidth =
+
+    // width = percentageWidth *
 
     // SDL_Log("%fx%f", percentageWidth, percentageHeight);
-    if (children.size())
-        for (auto &child : children)
-        {
-            child->handleResize(newWidth, newHeight);
-        }
+
+    updateLayout(newWindowWidth, newWindowHeight);
+
+    // if (children.size())
+    //     for (auto &child : children)
+    //     {
+    //         child->handleResize(newWidth, newHeight);
+    //     }
 }
 
 bool Element::isInside(int mouseX, int mouseY)
 {
-    return (x <= mouseX && x + width >= mouseX) && (y <= mouseY && y + height >= mouseY);
+    return (relativeX <= mouseX && relativeX + relativeWidth >= mouseX) && (relativeY <= mouseY && relativeY + relativeHeight >= mouseY);
 }
 
 bool Element::isInsideElement(int mouseX, int mouseY, Element *element)
