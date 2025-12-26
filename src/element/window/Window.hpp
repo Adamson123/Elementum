@@ -1,6 +1,5 @@
 #pragma once
 #include "../Element.hpp"
-#include "../widget/Widget.hpp"
 
 class Widget;
 
@@ -15,4 +14,7 @@ public:
     unique_ptr<Widget> createWidget(float x, float y, float width, float height);
 
     void handleClickWithIn(float mouseX, float mouseY);
+
+private:
+    string type = "window";
 };

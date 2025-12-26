@@ -4,10 +4,9 @@
 void Widget::assignToClickedElement(float mouseX, float mouseY)
 {
 
-    if (isInside(mouseX, mouseY))
+    if (isInside(mouseX, mouseY) && window)
     {
-        if (window)
-            window->clickedElement = this;
+        window->clickedElement = this;
     }
 
     auto sortedChildren = getSortedChildren();
@@ -26,16 +25,8 @@ void Widget::assignToClickedElement(float mouseX, float mouseY)
 
 void Widget::propagateClick()
 {
-    // cout << "propagateClick called on: " << className
-    //      << " (ptr: " << this << ")" << endl;
-    // cout << "onClick is: " << (onClick ? "SET" : "NULL") << endl;
-
     if (onClick)
-    {
-        // cout << "Calling onClick..." << endl;
-        onClick(); // ← Crash happens here
-                   //  cout << "onClick completed" << endl;
-    }
+        onClick();
 
     if (parent && isPropagateClick)
     {
@@ -43,12 +34,10 @@ void Widget::propagateClick()
         // If parent is Widget, continue propagation
         if (auto widget = dynamic_cast<Widget *>(parent))
         {
-            // cout << "PRoppagating\n";
             widget->propagateClick();
         }
         else if (parent->onClick)
         {
-            // cout << "PRoppagating SECCCCC\n";
             parent->onClick();
         }
     }

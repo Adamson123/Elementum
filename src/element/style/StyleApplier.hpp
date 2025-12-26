@@ -14,9 +14,10 @@ class Element;
 class StyleApplier
 {
 private:
-    static unordered_map<string, StyleHandler> handlers;
+    unordered_map<string, StyleHandler> handlers;
 
 public:
-    static void apply(Element *element, StyleDef &styles);
+    StyleApplier();
+    void apply(Element *element, StyleDef &styles);
     // unordered_map<string, StyleHandler> handlers;
 };

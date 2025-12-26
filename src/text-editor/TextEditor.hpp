@@ -2,16 +2,18 @@
 #include <SDL.h>
 #include <SDL_ttf.h>
 #include <memory>
-#include "../element/window/Window.hpp"
-#include "../element/FontManager.hpp"
-#include "../element/style/StyleApplier.hpp"
 
 using namespace std;
+
+class FontManager;
+class Window;
+class StyleApplier;
 
 class TextEditor
 {
 public:
     TextEditor(float windowWidth, float windowHeight);
+    ~TextEditor();
 
     float windowWidth;
     float windowHeight;

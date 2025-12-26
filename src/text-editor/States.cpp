@@ -4,14 +4,12 @@
 #include "../element/window/Window.hpp"
 #include "../element/widget/Widget.hpp"
 #include "../element/FontManager.hpp"
+#include "../element/style/StyleApplier.hpp"
 #include "../Constants.h"
 #include <memory>
 
 using namespace std;
 using namespace Constants;
-
-// unique_ptr<FontManager> fontManager = make_unique<FontManager>();
-// Window window(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
 // Runs only once
 void TextEditor::Init()

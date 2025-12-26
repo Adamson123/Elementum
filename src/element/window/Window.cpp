@@ -11,18 +11,22 @@ Window::Window(float x, float y, float width, float height) : Element(x, y, widt
 unique_ptr<Widget> Window::createWidget()
 {
     auto widget = make_unique<Widget>(0, 0, 0, 0);
+
     widget->window = this;
-    // widget->setFontSize(widget->parent ? widget->parent->style.fontSize : 12);
     widget->fontManager = fontManager;
+    widget->styleApplier = styleApplier;
+
     return std::move(widget);
 }
 
 unique_ptr<Widget> Window::createWidget(float x, float y, float width, float height)
 {
-    auto widget = make_unique<Widget>(x, y, width, height);
-    widget->window = this;
-    // widget->setFontSize(widget->parent ? widget->parent->style.fontSize : 12);
-    widget->fontManager = fontManager;
+    auto widget = createWidget();
+    widget->x = x;
+    widget->y = y;
+    widget->width = width;
+    widget->height = height;
+
     return std::move(widget);
 }
 

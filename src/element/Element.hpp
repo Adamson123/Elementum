@@ -6,11 +6,10 @@
 #include <vector>
 #include <utility>
 #include <SDL_ttf.h>
-#include "./FontManager.hpp"
-#include "./style/StyleApplier.hpp"
 
 class Window;
 class Rectangle;
+class FontManager;
 class StyleApplier;
 
 class Element
@@ -24,9 +23,9 @@ public:
     float relativeX, relativeY, relativeWidth, relativeHeight;
 
     Element *parent = nullptr;
-    TTF_Font *font;
-    FontManager *fontManager;
-    StyleApplier *styleApplier;
+    TTF_Font *font = nullptr;
+    FontManager *fontManager = nullptr;
+    StyleApplier *styleApplier = nullptr;
 
     Style style;
     string id, className, text;
@@ -61,4 +60,7 @@ public:
 
     bool isInside(int mouseX, int mouseY);
     bool isInsideElement(int mouseX, int mouseY, Element *element);
+
+private:
+    string type = "element";
 };

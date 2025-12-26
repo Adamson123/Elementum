@@ -3,6 +3,8 @@
 #include "Element.hpp"
 #include <memory>
 #include "../Constants.h"
+#include "./FontManager.hpp"
+#include "./style/StyleApplier.hpp"
 
 using namespace std;
 using namespace Constants;
@@ -121,7 +123,8 @@ void Element::updateLayout(float newWindowWidth, float newWindowHeight)
 
 void Element::addStyle(StyleDef &styleDef)
 {
-    styleApplier->apply(this, styleDef);
+    if (styleApplier)
+        styleApplier->apply(this, styleDef);
 }
 
 void Element::addChild(unique_ptr<Element> child)

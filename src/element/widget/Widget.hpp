@@ -15,4 +15,7 @@ public:
 
     void assignToClickedElement(float mouseX, float mouseY);
     void propagateClick();
+
+private:
+    string type = "widget";
 };
