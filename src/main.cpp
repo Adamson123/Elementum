@@ -17,8 +17,8 @@ int main(int argc, char *argv[])
     SDL_Window *win = SDL_CreateWindow("Text editor", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
     SDL_Renderer *ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
-    TextEditor textEditor(0, 0);
-    textEditor.Init();
+    TextEditor textEditor(WINDOW_WIDTH, WINDOW_HEIGHT);
+    textEditor.Init(ren);
 
     bool running = true;
     SDL_Event event;

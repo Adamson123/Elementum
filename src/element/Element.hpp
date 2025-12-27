@@ -1,6 +1,7 @@
 #pragma once
 #include <SDL.h>
 #include "style/Style.hpp"
+#include "style/ComputedStyle.hpp"
 #include <functional>
 #include <memory>
 #include <vector>
@@ -11,6 +12,8 @@ class Window;
 class Rectangle;
 class FontManager;
 class StyleApplier;
+class Painter;
+class StyleComputer;
 
 class Element
 {
@@ -18,23 +21,30 @@ public:
     Element(float x, float y, float width, float height);
     virtual ~Element() = default;
 
-    float initialX, initialY, initialWidth, initialHeight;
     float x = 0, y = 0, width = 0, height = 0;
-    float relativeX, relativeY, relativeWidth, relativeHeight;
+
+    // Flags
+    bool styleDirty = true;
+    bool layoutDirty = true;
+    bool paintDirty = true;
 
     Element *parent = nullptr;
     TTF_Font *font = nullptr;
+
     FontManager *fontManager = nullptr;
     StyleApplier *styleApplier = nullptr;
+    Painter *painter = nullptr;
+    StyleComputer *styleComputer = nullptr;
 
     Style style;
+    ComputedStyle computedStyle;
+
     string id, className, text;
 
     vector<unique_ptr<Element>> children;
     vector<Element *> getSortedChildren();
 
-    void render(SDL_Renderer *renderer);
-    void renderText(SDL_Renderer *renderer);
+    void render(float windowWidth, float windowHeight);
 
     void addStyle(StyleDef &styleDef);
 
