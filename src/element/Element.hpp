@@ -33,12 +33,14 @@ public:
     bool paintDirty = true;
 
     Element *parent = nullptr;
-    TTF_Font *font = nullptr;
 
-    FontManager *fontManager = nullptr;
+    // TTF_Font *font = nullptr;
+    // FontManager *fontManager = nullptr;
+
     StyleApplier *styleApplier = nullptr;
     Painter *painter = nullptr;
     StyleComputer *styleComputer = nullptr;
+    // SDL_Texture *textTexture = nullptr;
 
     Style style;
     ComputedStyle computedStyle;

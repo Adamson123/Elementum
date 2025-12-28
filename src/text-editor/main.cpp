@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
             if (event.type == SDL_QUIT)
                 running = false;
 
-            textEditor.ListenToEvent(&event);
+            textEditor.Event(&event);
 
             // std::cout << event.type << std::endl;
         }

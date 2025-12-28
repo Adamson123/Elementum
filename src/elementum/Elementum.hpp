@@ -23,7 +23,7 @@ public:
     void Init();
     void Run();
     void End();
-    void ListenToEvent(SDL_Event *event);
+    void Event(SDL_Event *event);
 
     unique_ptr<FontManager> fontManager;
     unique_ptr<Window> window;
