@@ -1,9 +1,9 @@
 #include "Elementum.hpp"
-#include "../element/window/Window.hpp"
-#include "../element/FontManager.hpp"
-#include "../element/style/style-applier/StyleApplier.hpp"
-#include "../element/painter/Painter.hpp"
-#include "../element/style/style-computer/StyleComputer.hpp"
+#include "./element/window/Window.hpp"
+#include "./element/FontManager.hpp"
+#include "./element/style/style-applier/StyleApplier.hpp"
+#include "./element/painter/Painter.hpp"
+#include "./element/style/style-computer/StyleComputer.hpp"
 
 Elementum::~Elementum() = default;
 Elementum::Elementum(float windowWidth, float windowHeight, SDL_Renderer *renderer) : windowHeight(windowHeight), windowWidth(windowWidth)

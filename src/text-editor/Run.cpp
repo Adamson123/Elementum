@@ -1,8 +1,8 @@
 #include <iostream>
 #include "../elementum/Elementum.hpp"
-#include "../element/Element.hpp"
-#include "../element/window/Window.hpp"
-#include "../element/widget/Widget.hpp"
+#include "../elementum/element/Element.hpp"
+#include "../elementum/element/window/Window.hpp"
+#include "../elementum/element/widget/Widget.hpp"
 
 // Runs every frame
 void Elementum::Run()
