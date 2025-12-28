@@ -70,61 +70,96 @@ ParsedValue parseValue(const string &v)
     throw runtime_error("Invalid value: " + v);
 }
 
+// With callback
+void setStartPosition(const string &v, function<void(StartPosition)> setter)
+{
+    if (v == "parent")
+        setter(StartPosition::PARENT);
+    else if (v == "prevSibling")
+        setter(StartPosition::PREV_SIBLING);
+    else
+        throw runtime_error("Invalid value for start position: " + v);
+}
+
 StyleApplier::StyleApplier()
 {
+    //
     handlers["color"] = [](Element *element, const string &v)
     {
         element->setColor(convertStringToColor(v));
     };
 
+    //
     handlers["backgroundColor"] = [](Element *element, const string &v)
     {
         element->setBackgroundColor(convertStringToColor(v));
     };
 
+    //
     handlers["borderColor"] = [](Element *element, const string &v)
     {
         element->setBorderColor(convertStringToColor(v));
     };
 
+    //
     handlers["borderWidth"] = [](Element *element, const string &v)
     {
         auto parsed = parseValue(v);
         element->setBorderWidth(parsed.value, parsed.unit);
     };
 
+    //
     handlers["width"] = [](Element *element, const string &v)
     {
         auto parsed = parseValue(v);
         element->setWidth(parsed.value, parsed.unit);
     };
 
+    //
     handlers["height"] = [](Element *element, const string &v)
     {
         auto parsed = parseValue(v);
         element->setHeight(parsed.value, parsed.unit);
     };
 
+    //
     handlers["x"] = [](Element *element, const string &v)
     {
         auto parsed = parseValue(v);
         element->setX(parsed.value, parsed.unit);
     };
 
+    //
     handlers["y"] = [](Element *element, const string &v)
     {
         auto parsed = parseValue(v);
         element->setY(parsed.value, parsed.unit);
     };
 
+    //
     handlers["fontSize"] = [](Element *element, const string &v)
     {
         element->setFontSize(stoi(v));
     };
 
+    //
     handlers["fontFamily"] = [](Element *element, const string &v)
     {
         element->setFontFamily(v);
+    };
+
+    //
+    handlers["startX"] = [](Element *element, const string &v)
+    {
+        setStartPosition(v, [&](StartPosition pos)
+                         { element->setStartX(pos); });
+    };
+
+    //
+    handlers["startY"] = [](Element *element, const string &v)
+    {
+        setStartPosition(v, [&](StartPosition pos)
+                         { element->setStartY(pos); });
     };
 }
 

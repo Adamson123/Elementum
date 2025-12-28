@@ -30,18 +30,17 @@ public:
     // Flags
     bool layoutDirty = true;
     // TODO: Still useless
-    bool paintDirty = true;
-    bool textDirty = true;
+    // bool paintDirty = true;
+    // bool textDirty = true;
 
     Element *parent = nullptr;
-
+    Element *prevSibling = nullptr;
     // TTF_Font *font = nullptr;
     // FontManager *fontManager = nullptr;
 
     StyleApplier *styleApplier = nullptr;
     Painter *painter = nullptr;
     StyleComputer *styleComputer = nullptr;
-    SDL_Texture *textTexture = nullptr;
 
     Style style;
     ComputedStyle computedStyle;
@@ -89,12 +88,16 @@ public:
     void setBorderWidth(float value, Unit unit = Unit::PX);
     void setFontSize(int size);
     void setFontFamily(const std::string &family);
+    void setStartX(StartPosition startX);
+    void setStartY(StartPosition startY);
 
     // Computed size and position getters
     float getX() const { return computedStyle.x; }
     float getY() const { return computedStyle.y; }
     float getWidth() const { return computedStyle.width; }
     float getHeight() const { return computedStyle.height; }
+
+    UIType getType() const { return type; }
 
 private:
     UIType type = UIType::ELEMENT;

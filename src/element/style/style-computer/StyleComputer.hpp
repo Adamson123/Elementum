@@ -12,6 +12,12 @@ struct Size
     float height;
 };
 
+struct ComputedStartPos
+{
+    float startX;
+    float startY;
+};
+
 class Element;
 
 class StyleComputer
@@ -27,5 +33,7 @@ private:
     // Calculator functions will return computed values
     Position calculatePosition(Element *element, float currentWindowWidth, float currentWindowHeight);
     Size calculateSize(Element *element, float currentWindowWidth, float currentWindowHeight);
+    ComputedStartPos calculateStartPosition(Element *element, float currentWindowWidth, float currentWindowHeight);
+
     float calculateBorderWidth(Element *element);
 };

@@ -73,6 +73,10 @@ void Element::addStyle(StyleDef &styleDef)
 void Element::addChild(unique_ptr<Element> child)
 {
     child->parent = this;
+    if (!children.empty())
+    {
+        child->prevSibling = children.back().get();
+    }
     children.push_back(std::move(child));
 }
 

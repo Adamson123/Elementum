@@ -14,14 +14,14 @@ void Elementum::Init()
     window->className = "Window_";
 
     // PX by default
-    auto element = window->createWidget(20, 0, 100, 50);
+    auto element = window->createWidget();
     element->className = "brown";
     element->text = "I am saying helloooo\n ggggggggg";
 
-    auto elementChild = window->createWidget(40, 0, 50, 100);
+    auto elementChild = window->createWidget();
     elementChild->className = "black";
 
-    auto elementChildChild = window->createWidget(50, 50, 20, 20);
+    auto elementChildChild = window->createWidget();
     // auto Child = window->createWidget();
     elementChildChild->className = "child_Child";
 
@@ -31,24 +31,30 @@ void Elementum::Init()
         {"x", "0px"},
         {"width", "70%"},
         {"height", "80%"},
+        {"y", "10%"},
         //  {"borderWidth", "50%"}
 
     };
 
+    element->addStyle(InputType);
     StyleDef InputType2 = InputType;
     InputType2["backgroundColor"] = "120,0,25,255";
-    InputType2["y"] = "10%";
+    // InputType2["y"] = "10%";
     InputType2["x"] = "50px";
-    InputType2["width"] = "100%";
+    InputType2["width"] = "30%";
 
-    element->addStyle(InputType);
     elementChild->addStyle(InputType2);
     InputType["backgroundColor"] = "120,0,125,255";
+    InputType["width"] = "20px";
+    InputType["startX"] = "prevSibling";
+
+    // InputType["y"] = "0px";
+
     elementChildChild->addStyle(InputType);
 
     {
-        elementChild->addChild(std::move(elementChildChild));
-        element->addChild(std::move(elementChild));
+        // elementChild->addChild();
+        element->addManyChild(std::move(elementChild), std::move(elementChildChild));
 
         window->addManyChild(std::move(element)
                              // ,std::move(element2),

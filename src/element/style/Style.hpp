@@ -12,6 +12,11 @@ enum class Unit
     PX,
     PERCENT
 };
+enum class StartPosition
+{
+    PARENT,
+    PREV_SIBLING
+};
 
 struct Units
 {
@@ -29,17 +34,20 @@ private:
               color = {255, 255, 255, 255},
               borderColor = {0, 255, 0, 0};
 
-    string fontFamily = "fonts/arial.ttf";
+    string
+        fontFamily = "fonts/arial.ttf";
 
     int zIndex = 0;
 
     float
-        width,
-        height,
         x,
         y,
+        width,
+        height,
         borderWidth,
         fontSize = 25;
+
+    StartPosition startX = StartPosition::PARENT, startY = StartPosition::PARENT;
 
     Units unit;
 
@@ -64,4 +72,7 @@ public:
     float getY() const { return y; }
     float getBorderWidth() const { return borderWidth; }
     float getFontSize() const { return fontSize; }
+
+    StartPosition getStartX() const { return startX; }
+    StartPosition getStartY() const { return startY; }
 };
