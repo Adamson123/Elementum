@@ -36,29 +36,37 @@ void Painter::paintText(Element *element)
     if (element->text.empty())
         return;
 
-    if (element->textDirty)
+    Style style = element->style;
+    TTF_Font *font = fontManager->get(style.fontFamily, style.fontSize);
+
+    // 1️⃣ Render text to surface
+    SDL_Surface *surface = TTF_RenderText_Solid(font, element->text.c_str(), style.color);
+    if (!surface)
     {
-        if (element->textTexture)
-            SDL_DestroyTexture(element->textTexture);
+        cout << "Surface error: " << TTF_GetError() << endl;
+        return;
+    }
+    // 2️⃣ Convert surface to texture
+    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
+    SDL_FreeSurface(surface);
 
-        TTF_Font *font = fontManager->get(
-            element->style.fontFamily,
-            element->style.fontSize);
-
-        SDL_Surface *surface =
-            TTF_RenderText_Blended(font, element->text.c_str(), element->style.color);
-        element->textTexture =
-            SDL_CreateTextureFromSurface(renderer, surface);
-
-        SDL_FreeSurface(surface);
-        element->textDirty = false;
+    if (!texture)
+    {
+        cout << "Texture error: " << SDL_GetError() << endl;
+        return;
     }
 
-    SDL_FRect dst;
-    dst.x = element->computedStyle.x;
-    dst.y = element->computedStyle.y;
+    // 3️⃣ Query texture size
+    SDL_Rect dstRect;
+    dstRect.x = element->computedStyle.x;
+    dstRect.y = element->computedStyle.y;
+    SDL_QueryTexture(texture, nullptr, nullptr, &dstRect.w, &dstRect.h);
 
-    SDL_RenderCopyF(renderer, element->textTexture, nullptr, &dst);
+    // 4️⃣ Copy texture to renderer
+    SDL_RenderCopy(renderer, texture, nullptr, &dstRect);
+
+    // 5️⃣ Cleanup texture
+    SDL_DestroyTexture(texture);
 }
 
 void Painter::paintBorder(Element *element)
