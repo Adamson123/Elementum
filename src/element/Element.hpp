@@ -8,8 +8,14 @@
 #include <utility>
 #include <SDL_ttf.h>
 
+enum class UIType
+{
+    ELEMENT,
+    WINDOW,
+    WIDGET,
+};
+
 class Window;
-class Rectangle;
 class FontManager;
 class StyleApplier;
 class Painter;
@@ -87,5 +93,5 @@ public:
     float getHeight() const { return computedStyle.height; }
 
 private:
-    string type = "element";
+    UIType type = UIType::ELEMENT;
 };

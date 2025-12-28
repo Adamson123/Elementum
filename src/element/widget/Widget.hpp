@@ -17,5 +17,5 @@ public:
     void propagateClick();
 
 private:
-    string type = "widget";
+    UIType type = UIType::WIDGET;
 };

@@ -17,5 +17,5 @@ public:
     // void onWindowResize(float newWidth, float newHeight);
 
 private:
-    string type = "window";
+    UIType type = UIType::WINDOW;
 };
