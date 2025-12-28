@@ -4,7 +4,7 @@
 #include <memory>
 #include "../Constants.h"
 #include "./FontManager.hpp"
-#include "./style/StyleApplier.hpp"
+#include "./style/style-applier/StyleApplier.hpp"
 #include "./painter/Painter.hpp"
 #include "./style/style-computer/StyleComputer.hpp"
 
@@ -40,8 +40,13 @@ vector<Element *> Element::getSortedChildren()
 void Element::render(float windowWidth, float windowHeight)
 {
 
-    // styleComputer->computePosition(this, windowWidth, windowHeight);
-    // styleComputer->computeSize(this, windowWidth, windowHeight);
+    if (layoutDirty)
+    {
+        styleComputer->computePosition(this, windowWidth, windowHeight);
+        styleComputer->computeSize(this, windowWidth, windowHeight);
+        styleComputer->computeBorderWidth(this);
+    }
+
     painter->paint(this);
 
     if (children.size() > 0)
@@ -50,28 +55,23 @@ void Element::render(float windowWidth, float windowHeight)
 
         for (auto &child : sorted)
         {
+            // Propagate layout dirty flag to children
+            if (layoutDirty)
+            {
+                child->layoutDirty = true;
+            }
             child->render(windowWidth, windowHeight);
         }
     }
-}
-
-void Element::updateLayout(float newWindowWidth, float newWindowHeight)
-{
-
-    styleComputer->computePosition(this, newWindowWidth, newWindowHeight);
-    styleComputer->computeSize(this, newWindowWidth, newWindowHeight);
-    styleComputer->computeBorderWidth(this);
-
-    for (auto &child : children)
-    {
-        child->updateLayout(newWindowWidth, newWindowHeight);
-    }
+    layoutDirty = false;
 }
 
 void Element::addStyle(StyleDef &styleDef)
 {
     if (styleApplier)
+    {
         styleApplier->apply(this, styleDef);
+    }
 }
 
 void Element::addChild(unique_ptr<Element> child)
@@ -92,18 +92,6 @@ void Element::click(int mouseX, int mouseY)
 {
     if (onClick)
         onClick();
-}
-
-void Element::handleResize(float newWindowWidth, float newWindowHeight)
-{
-
-    updateLayout(newWindowWidth, newWindowHeight);
-
-    if (children.size())
-        for (auto &child : children)
-        {
-            child->handleResize(newWindowWidth, newWindowHeight);
-        }
 }
 
 bool Element::isInside(int mouseX, int mouseY)

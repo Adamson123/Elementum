@@ -8,27 +8,8 @@ using namespace std;
 
 Window::Window(float x, float y, float width, float height) : Element(x, y, width, height) {}
 
-unique_ptr<Widget> Window::createWidget()
-{
-    auto widget = make_unique<Widget>(0, 0, 0, 0);
-
-    widget->window = this;
-    widget->fontManager = fontManager;
-    widget->styleApplier = styleApplier;
-    widget->painter = painter;
-    widget->styleComputer = styleComputer;
-
-    return std::move(widget);
-}
-
 unique_ptr<Widget> Window::createWidget(float x, float y, float width, float height)
 {
-    // auto widget = createWidget();
-    // widget->x = x;
-    // widget->y = y;
-    // widget->width = width;
-    // widget->height = height;
-    // widget->computedStyle.width =width
     auto widget = make_unique<Widget>(x, y, width, height);
 
     widget->window = this;
@@ -67,10 +48,4 @@ void Window::handleClickWithIn(float mouseX, float mouseY)
         if (onClick)
             onClick();
     }
-}
-
-void Window::onWindowResize(float newWidth, float newHeight)
-{
-    style.width = newWidth;
-    style.height = newHeight;
 }

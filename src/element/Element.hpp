@@ -48,8 +48,8 @@ public:
 
     void addStyle(StyleDef &styleDef);
 
-    void updateLayout(float newWindowWidth, float newWindowHeight);
-    // void setFontSize(int size);
+    // void updateLayout(float newWindowWidth, float newWindowHeight);
+    //  void setFontSize(int size);
 
     void addChild(unique_ptr<Element> child);
     template <typename... Args>
@@ -70,6 +70,17 @@ public:
 
     bool isInside(int mouseX, int mouseY);
     bool isInsideElement(int mouseX, int mouseY, Element *element);
+
+    // Style Setters
+    void setWidth(float value, Unit unit = Unit::PX);
+    void setHeight(float value, Unit unit = Unit::PX);
+    void setX(float value, Unit unit = Unit::PX);
+    void setY(float value, Unit unit = Unit::PX);
+    void setBackgroundColor(SDL_Color color);
+    void setBorderColor(SDL_Color color);
+    void setColor(SDL_Color color);
+    void setBorderWidth(float value, Unit unit = Unit::PX);
+    void setFontSize(int size);
 
 private:
     string type = "element";

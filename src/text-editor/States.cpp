@@ -4,7 +4,7 @@
 #include "../element/window/Window.hpp"
 #include "../element/widget/Widget.hpp"
 #include "../element/FontManager.hpp"
-#include "../element/style/StyleApplier.hpp"
+#include "../element/style/style-applier/StyleApplier.hpp"
 #include "../element/painter/Painter.hpp"
 #include "../element/style/style-computer/StyleComputer.hpp"
 #include "../Constants.h"
@@ -17,6 +17,7 @@ using namespace Constants;
 void TextEditor::Init(SDL_Renderer *renderer)
 {
 
+    // TODO: Might be moved to TextEditor constructor
     window = make_unique<Window>(0, 0, windowWidth, windowHeight);
     fontManager = make_unique<FontManager>();
     styleApplier = make_unique<StyleApplier>();
@@ -28,19 +29,17 @@ void TextEditor::Init(SDL_Renderer *renderer)
     window->fontManager = fontManager.get();
     window->styleApplier = styleApplier.get();
     window->painter = painter.get();
+    ////
 
-    window->style.backgroundColor = {31, 31, 31, 255};
-
-    // StyleDef tmp = {
-    //     {"width", "100%"},
-    //     {"height", "100%"}};
-    // window->addStyle(tmp);
+    StyleDef tmp = {
+        {"backgroundColor", "31,31,31,255"}};
+    window->addStyle(tmp);
+    // window->style.backgroundColor = {1, 2, 4, 255};
 
     window->className = "Window_";
 
     // PX by default
     auto element = window->createWidget(20, 0, 100, 50);
-    element->style.backgroundColor = {24, 24, 24, 255};
     element->className = "brown";
     element->text = "I am saying helloooo";
 
@@ -48,7 +47,7 @@ void TextEditor::Init(SDL_Renderer *renderer)
     elementChild->className = "black";
 
     auto elementChildChild = window->createWidget(50, 50, 20, 20);
-    elementChildChild->style.backgroundColor = {23, 244, 255, 255};
+    // auto Child = window->createWidget();
     elementChildChild->className = "child_Child";
 
     StyleDef InputType = {
@@ -57,7 +56,7 @@ void TextEditor::Init(SDL_Renderer *renderer)
         {"x", "0px"},
         {"width", "70%"},
         {"height", "80%"},
-        {"borderWidth", "20%"}
+        // {"borderWidth", "10px"}
 
     };
 
@@ -69,6 +68,7 @@ void TextEditor::Init(SDL_Renderer *renderer)
 
     element->addStyle(InputType);
     elementChild->addStyle(InputType2);
+    InputType["backgroundColor"] = "120,0,125,255";
     elementChildChild->addStyle(InputType);
 
     {
@@ -80,7 +80,7 @@ void TextEditor::Init(SDL_Renderer *renderer)
                              // std::move(element3)
         );
     }
-    window->updateLayout(windowWidth, windowHeight);
+    // window->updateLayout(windowWidth, windowHeight);
 }
 
 void TextEditor::ListenToEvent(SDL_Event *event)
@@ -103,8 +103,9 @@ void TextEditor::ListenToEvent(SDL_Event *event)
         windowWidth = newWidth;
         windowHeight = newHeight;
 
-        window->onWindowResize(newWidth, newHeight);
-        window->handleResize(newWidth, newHeight);
+        // TODO
+        window->setWidth(newWidth);
+        window->setHeight(newHeight);
     }
 }
 
@@ -112,11 +113,15 @@ void TextEditor::ListenToEvent(SDL_Event *event)
 void TextEditor::Run(SDL_Renderer *renderer)
 {
 
-    // SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255);
+    // To clear screen with window background color
+    SDL_Color windowBgColor = window->style.getBackgroundColor();
+    SDL_SetRenderDrawColor(renderer, windowBgColor.r, windowBgColor.g, windowBgColor.b, windowBgColor.a);
+
     SDL_RenderClear(renderer);
 
     window->render(windowWidth, windowHeight);
     Element *child = window->getChild(0);
+    child->setWidth(100, Unit::PERCENT);
 
     child->onClick = [=]()
     {

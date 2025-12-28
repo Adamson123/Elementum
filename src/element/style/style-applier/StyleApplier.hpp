@@ -2,12 +2,12 @@
 #include <unordered_map>
 #include <string>
 #include <functional>
-#include "../Element.hpp"
-#include "./Style.hpp"
+#include "../../Element.hpp"
+#include "../Style.hpp"
 
 using namespace std;
 
-using StyleHandler = function<void(Style &s, const string &)>;
+using StyleHandler = function<void(Element *element, const string &)>;
 
 class Element;
 

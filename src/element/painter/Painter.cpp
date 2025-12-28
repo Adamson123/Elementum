@@ -9,12 +9,12 @@ void Painter::paint(Element *element)
 {
     if (!renderer)
     {
-        cout << "No renderer was attached" << endl;
+        throw runtime_error("No renderer was attached");
     }
 
     paintBackground(element);
     paintText(element);
-    paintBorder(element);
+    // paintBorder(element);
 }
 
 void Painter::paintBackground(Element *element)
@@ -46,10 +46,10 @@ void Painter::paintText(Element *element)
         cout << "Surface error: " << TTF_GetError() << endl;
         return;
     }
-
     // 2️⃣ Convert surface to texture
     SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
     SDL_FreeSurface(surface);
+
     if (!texture)
     {
         cout << "Texture error: " << SDL_GetError() << endl;

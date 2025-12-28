@@ -72,48 +72,49 @@ ParsedValue parseValue(const string &v)
 
 StyleApplier::StyleApplier()
 {
-    handlers = {
+    handlers["color"] = [](Element *element, const string &v)
+    {
+        element->setColor(convertStringToColor(v));
+    };
 
-        {"color", [](Style &s, const string &v)
-         { s.color = convertStringToColor(v); }},
+    handlers["backgroundColor"] = [](Element *element, const string &v)
+    {
+        element->setBackgroundColor(convertStringToColor(v));
+    };
 
-        {"backgroundColor", [](Style &s, const string &v)
-         { s.backgroundColor = convertStringToColor(v); }},
+    handlers["borderColor"] = [](Element *element, const string &v)
+    {
+        element->setBorderColor(convertStringToColor(v));
+    };
 
-        {"borderColor", [](Style &s, const string &v)
-         { s.borderColor = convertStringToColor(v); }},
+    handlers["borderWidth"] = [](Element *element, const string &v)
+    {
+        auto parsed = parseValue(v);
+        element->setBorderWidth(parsed.value, parsed.unit);
+    };
 
-        {"borderWidth", [](Style &s, const string &v)
-         {
-             auto parsed = parseValue(v);
-             s.borderWidth = parsed.value;
-             s.unit.borderWidth = parsed.unit;
-         }},
-        {"width", [](Style &s, const string &v)
-         {
-             auto parsed = parseValue(v);
-             s.width = parsed.value;
-             s.unit.width = parsed.unit;
-         }},
-        {"height", [](Style &s, const string &v)
-         {
-             auto parsed = parseValue(v);
-             s.height = parsed.value;
-             s.unit.height = parsed.unit;
-         }},
-        {"x", [](Style &s, const string &v)
-         {
-             auto parsed = parseValue(v);
-             s.x = parsed.value;
-             s.unit.x = parsed.unit;
-         }},
-        {"y", [](Style &s, const string &v)
-         {
-             auto parsed = parseValue(v);
-             s.y = parsed.value;
-             s.unit.y = parsed.unit;
-         }}
+    handlers["width"] = [](Element *element, const string &v)
+    {
+        auto parsed = parseValue(v);
+        element->setWidth(parsed.value, parsed.unit);
+    };
 
+    handlers["height"] = [](Element *element, const string &v)
+    {
+        auto parsed = parseValue(v);
+        element->setHeight(parsed.value, parsed.unit);
+    };
+
+    handlers["x"] = [](Element *element, const string &v)
+    {
+        auto parsed = parseValue(v);
+        element->setX(parsed.value, parsed.unit);
+    };
+
+    handlers["y"] = [](Element *element, const string &v)
+    {
+        auto parsed = parseValue(v);
+        element->setY(parsed.value, parsed.unit);
     };
 }
 
@@ -124,7 +125,7 @@ void StyleApplier::apply(Element *element, StyleDef &styles)
         auto it = handlers.find(key);
         if (it != handlers.end())
         {
-            it->second(element->style, value);
+            it->second(element, value);
         }
         else
         {
