@@ -6,8 +6,6 @@ void StyleComputer::computePosition(Element *element, float currentWindowWidth, 
     Position pos = calculatePosition(element, currentWindowWidth, currentWindowHeight);
     element->computedStyle.x = pos.x;
     element->computedStyle.y = pos.y;
-    element->x = pos.x;
-    element->y = pos.y;
 }
 
 void StyleComputer::computeSize(Element *element, float currentWindowWidth, float currentWindowHeight)
@@ -15,8 +13,6 @@ void StyleComputer::computeSize(Element *element, float currentWindowWidth, floa
     Size size = calculateSize(element, currentWindowWidth, currentWindowHeight);
     element->computedStyle.width = size.width;
     element->computedStyle.height = size.height;
-    element->width = size.width;
-    element->height = size.height;
 }
 
 void StyleComputer::computeBorderWidth(Element *element)

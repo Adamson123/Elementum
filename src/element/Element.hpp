@@ -21,11 +21,9 @@ public:
     Element(float x, float y, float width, float height);
     virtual ~Element() = default;
 
-    float x = 0, y = 0, width = 0, height = 0;
-
     // Flags
-    bool styleDirty = true;
     bool layoutDirty = true;
+    // TODO: Still useless
     bool paintDirty = true;
 
     Element *parent = nullptr;
@@ -81,6 +79,12 @@ public:
     void setColor(SDL_Color color);
     void setBorderWidth(float value, Unit unit = Unit::PX);
     void setFontSize(int size);
+
+    // Computed size and position getters
+    float getX() const { return computedStyle.x; }
+    float getY() const { return computedStyle.y; }
+    float getWidth() const { return computedStyle.width; }
+    float getHeight() const { return computedStyle.height; }
 
 private:
     string type = "element";

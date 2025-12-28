@@ -11,7 +11,7 @@
 using namespace std;
 using namespace Constants;
 
-Element::Element(float x, float y, float width, float height) : x(x), y(y), width(width), height(height)
+Element::Element(float x, float y, float width, float height)
 {
     style.x = x;
     style.y = y;
