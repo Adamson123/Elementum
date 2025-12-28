@@ -14,7 +14,7 @@ void Painter::paint(Element *element)
 
     paintBackground(element);
     paintText(element);
-    // paintBorder(element);
+    paintBorder(element);
 }
 
 void Painter::paintBackground(Element *element)

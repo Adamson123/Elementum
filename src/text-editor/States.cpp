@@ -1,5 +1,5 @@
 #include <iostream>
-#include "TextEditor.hpp"
+#include "../elementum/Elementum.hpp"
 #include "../element/Element.hpp"
 #include "../element/window/Window.hpp"
 #include "../element/widget/Widget.hpp"
@@ -7,34 +7,19 @@
 #include "../element/style/style-applier/StyleApplier.hpp"
 #include "../element/painter/Painter.hpp"
 #include "../element/style/style-computer/StyleComputer.hpp"
-#include "../Constants.h"
+#include "./Constants.h"
 #include <memory>
 
 using namespace std;
 using namespace Constants;
 
 // Runs only once
-void TextEditor::Init(SDL_Renderer *renderer)
+void Elementum::Init()
 {
-
-    // TODO: Might be moved to TextEditor constructor
-    window = make_unique<Window>(0, 0, windowWidth, windowHeight);
-    fontManager = make_unique<FontManager>();
-    styleApplier = make_unique<StyleApplier>();
-    painter = make_unique<Painter>();
-    styleComputer = make_unique<StyleComputer>();
-
-    painter->renderer = renderer;
-
-    window->fontManager = fontManager.get();
-    window->styleApplier = styleApplier.get();
-    window->painter = painter.get();
-    ////
 
     StyleDef tmp = {
         {"backgroundColor", "31,31,31,255"}};
     window->addStyle(tmp);
-    // window->style.backgroundColor = {1, 2, 4, 255};
 
     window->className = "Window_";
 
@@ -56,7 +41,7 @@ void TextEditor::Init(SDL_Renderer *renderer)
         {"x", "0px"},
         {"width", "70%"},
         {"height", "80%"},
-        // {"borderWidth", "10px"}
+        //  {"borderWidth", "50%"}
 
     };
 
@@ -83,7 +68,7 @@ void TextEditor::Init(SDL_Renderer *renderer)
     // window->updateLayout(windowWidth, windowHeight);
 }
 
-void TextEditor::ListenToEvent(SDL_Event *event)
+void Elementum::ListenToEvent(SDL_Event *event)
 {
     // Click event
     if (event->type == SDL_MOUSEBUTTONDOWN)
@@ -110,7 +95,7 @@ void TextEditor::ListenToEvent(SDL_Event *event)
 }
 
 // Runs every frame
-void TextEditor::Run(SDL_Renderer *renderer)
+void Elementum::Run()
 {
 
     // To clear screen with window background color
@@ -135,7 +120,7 @@ void TextEditor::Run(SDL_Renderer *renderer)
     SDL_RenderPresent(renderer);
 }
 
-void TextEditor::End()
+void Elementum::End()
 {
     fontManager->clearFonts();
 }

@@ -11,17 +11,17 @@ class StyleApplier;
 class Painter;
 class StyleComputer;
 
-class TextEditor
+class Elementum
 {
 public:
-    TextEditor(float windowWidth, float windowHeight);
-    ~TextEditor();
+    Elementum(float windowWidth, float windowHeight, SDL_Renderer *renderer);
+    ~Elementum();
 
     float windowWidth;
     float windowHeight;
 
-    void Init(SDL_Renderer *renderer);
-    void Run(SDL_Renderer *renderer);
+    void Init();
+    void Run();
     void End();
     void ListenToEvent(SDL_Event *event);
 
@@ -30,4 +30,5 @@ public:
     unique_ptr<StyleApplier> styleApplier;
     unique_ptr<Painter> painter;
     unique_ptr<StyleComputer> styleComputer;
+    SDL_Renderer *renderer;
 };

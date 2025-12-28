@@ -2,14 +2,12 @@
 #include <iostream>
 #include "Element.hpp"
 #include <memory>
-#include "../Constants.h"
 #include "./FontManager.hpp"
 #include "./style/style-applier/StyleApplier.hpp"
 #include "./painter/Painter.hpp"
 #include "./style/style-computer/StyleComputer.hpp"
 
 using namespace std;
-using namespace Constants;
 
 Element::Element(float x, float y, float width, float height)
 {

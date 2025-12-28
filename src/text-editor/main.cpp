@@ -1,6 +1,6 @@
 #include <SDL_ttf.h>
 #include <iostream>
-#include "text-editor/TextEditor.hpp"
+#include "../elementum/Elementum.hpp"
 #include "Constants.h"
 
 using namespace Constants;
@@ -17,8 +17,8 @@ int main(int argc, char *argv[])
     SDL_Window *win = SDL_CreateWindow("Text editor", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
     SDL_Renderer *ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
-    TextEditor textEditor(WINDOW_WIDTH, WINDOW_HEIGHT);
-    textEditor.Init(ren);
+    Elementum textEditor(WINDOW_WIDTH, WINDOW_HEIGHT, ren);
+    textEditor.Init();
 
     bool running = true;
     SDL_Event event;
@@ -35,8 +35,8 @@ int main(int argc, char *argv[])
             // std::cout << event.type << std::endl;
         }
 
-        textEditor.Run(ren); // render/update every frame
-        SDL_Delay(16);       // tiny sleep if not using vsync
+        textEditor.Run(); // render/update every frame
+        SDL_Delay(16);    // tiny sleep if not using vsync
     }
 
     textEditor.End();
