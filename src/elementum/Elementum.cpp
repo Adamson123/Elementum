@@ -16,8 +16,8 @@ Elementum::Elementum(float windowWidth, float windowHeight, SDL_Renderer *render
 
     this->renderer = renderer;
     painter->renderer = renderer;
+    painter->fontManager = fontManager.get();
 
-    window->fontManager = fontManager.get();
     window->styleApplier = styleApplier.get();
     window->painter = painter.get();
 };

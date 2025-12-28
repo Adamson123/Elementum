@@ -31,6 +31,7 @@ public:
     bool layoutDirty = true;
     // TODO: Still useless
     bool paintDirty = true;
+    bool textDirty = true;
 
     Element *parent = nullptr;
 
@@ -40,7 +41,7 @@ public:
     StyleApplier *styleApplier = nullptr;
     Painter *painter = nullptr;
     StyleComputer *styleComputer = nullptr;
-    // SDL_Texture *textTexture = nullptr;
+    SDL_Texture *textTexture = nullptr;
 
     Style style;
     ComputedStyle computedStyle;
@@ -87,6 +88,7 @@ public:
     void setColor(SDL_Color color);
     void setBorderWidth(float value, Unit unit = Unit::PX);
     void setFontSize(int size);
+    void setFontFamily(const std::string &family);
 
     // Computed size and position getters
     float getX() const { return computedStyle.x; }

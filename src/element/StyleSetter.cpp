@@ -63,4 +63,11 @@ void Element::setFontSize(int size)
 {
     style.fontSize = size;
     paintDirty = true;
+    textDirty = true;
+}
+void Element::setFontFamily(const std::string &family)
+{
+    style.fontFamily = family;
+    paintDirty = true;
+    textDirty = true;
 }

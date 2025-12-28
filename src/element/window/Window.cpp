@@ -13,7 +13,6 @@ unique_ptr<Widget> Window::createWidget(float x, float y, float width, float hei
     auto widget = make_unique<Widget>(x, y, width, height);
 
     widget->window = this;
-    widget->fontManager = fontManager;
     widget->styleApplier = styleApplier;
     widget->painter = painter;
     widget->styleComputer = styleComputer;

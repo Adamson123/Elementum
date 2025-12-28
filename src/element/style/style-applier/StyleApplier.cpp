@@ -116,6 +116,16 @@ StyleApplier::StyleApplier()
         auto parsed = parseValue(v);
         element->setY(parsed.value, parsed.unit);
     };
+
+    handlers["fontSize"] = [](Element *element, const string &v)
+    {
+        element->setFontSize(stoi(v));
+    };
+
+    handlers["fontFamily"] = [](Element *element, const string &v)
+    {
+        element->setFontFamily(v);
+    };
 }
 
 void StyleApplier::apply(Element *element, StyleDef &styles)

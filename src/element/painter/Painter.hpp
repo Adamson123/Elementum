@@ -3,12 +3,14 @@
 #include <SDL_ttf.h>
 
 class Element;
+class FontManager;
 
 class Painter
 {
 public:
     //~Painter();
     SDL_Renderer *renderer;
+    FontManager *fontManager;
 
     void paint(Element *element);
 
