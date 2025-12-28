@@ -17,11 +17,13 @@ class Element;
 class StyleComputer
 {
 public:
+    void compute(Element *element, float currentWindowWidth, float currentWindowHeight);
+
+private:
     void computePosition(Element *element, float currentWindowWidth, float currentWindowHeight);
     void computeSize(Element *element, float currentWindowWidth, float currentWindowHeight);
     void computeBorderWidth(Element *element);
 
-private:
     // Calculator functions will return computed values
     Position calculatePosition(Element *element, float currentWindowWidth, float currentWindowHeight);
     Size calculateSize(Element *element, float currentWindowWidth, float currentWindowHeight);

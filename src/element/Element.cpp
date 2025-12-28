@@ -42,9 +42,7 @@ void Element::render(float windowWidth, float windowHeight)
 
     if (layoutDirty)
     {
-        styleComputer->computePosition(this, windowWidth, windowHeight);
-        styleComputer->computeSize(this, windowWidth, windowHeight);
-        styleComputer->computeBorderWidth(this);
+        styleComputer->compute(this, windowWidth, windowHeight);
     }
 
     painter->paint(this);

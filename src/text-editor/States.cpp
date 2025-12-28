@@ -97,15 +97,15 @@ void TextEditor::ListenToEvent(SDL_Event *event)
     // Resize event
     if (event->type == SDL_WINDOWEVENT && event->window.event == SDL_WINDOWEVENT_RESIZED)
     {
-        float newWidth = event->window.data1;
-        float newHeight = event->window.data2;
+        float currentWindowWidth = event->window.data1;
+        float currentWindowHeight = event->window.data2;
 
-        windowWidth = newWidth;
-        windowHeight = newHeight;
+        windowWidth = currentWindowWidth;
+        windowHeight = currentWindowHeight;
 
         // TODO
-        window->setWidth(newWidth);
-        window->setHeight(newHeight);
+        window->setWidth(currentWindowWidth);
+        window->setHeight(currentWindowHeight);
     }
 }
 
@@ -116,7 +116,6 @@ void TextEditor::Run(SDL_Renderer *renderer)
     // To clear screen with window background color
     SDL_Color windowBgColor = window->style.getBackgroundColor();
     SDL_SetRenderDrawColor(renderer, windowBgColor.r, windowBgColor.g, windowBgColor.b, windowBgColor.a);
-
     SDL_RenderClear(renderer);
 
     window->render(windowWidth, windowHeight);

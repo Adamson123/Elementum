@@ -1,6 +1,13 @@
 #include "./StyleComputer.hpp"
 #include "../../Element.hpp"
 
+void StyleComputer::compute(Element *element, float currentWindowWidth, float currentWindowHeight)
+{
+    computePosition(element, currentWindowWidth, currentWindowHeight);
+    computeSize(element, currentWindowWidth, currentWindowHeight);
+    computeBorderWidth(element);
+}
+
 void StyleComputer::computePosition(Element *element, float currentWindowWidth, float currentWindowHeight)
 {
     Position pos = calculatePosition(element, currentWindowWidth, currentWindowHeight);
