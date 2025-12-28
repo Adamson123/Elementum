@@ -22,7 +22,6 @@ void Elementum::Init()
     elementChild->className = "black";
 
     auto elementChildChild = window->createWidget();
-    // auto Child = window->createWidget();
     elementChildChild->className = "child_Child";
 
     StyleDef InputType = {
@@ -32,14 +31,12 @@ void Elementum::Init()
         {"width", "70%"},
         {"height", "80%"},
         {"y", "10%"},
-        //  {"borderWidth", "50%"}
-
     };
 
     element->addStyle(InputType);
+
     StyleDef InputType2 = InputType;
     InputType2["backgroundColor"] = "120,0,25,255";
-    // InputType2["y"] = "10%";
     InputType2["x"] = "50px";
     InputType2["width"] = "30%";
 
@@ -48,18 +45,10 @@ void Elementum::Init()
     InputType["width"] = "20px";
     InputType["startX"] = "prevSibling";
 
-    // InputType["y"] = "0px";
-
     elementChildChild->addStyle(InputType);
 
     {
-        // elementChild->addChild();
         element->addManyChild(std::move(elementChild), std::move(elementChildChild));
-
-        window->addManyChild(std::move(element)
-                             // ,std::move(element2),
-                             // std::move(element3)
-        );
+        window->addManyChild(std::move(element));
     }
-    // window->updateLayout(windowWidth, windowHeight);
 }
