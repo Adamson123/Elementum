@@ -13,7 +13,7 @@ void Elementum::Run()
     SDL_SetRenderDrawColor(renderer, windowBgColor.r, windowBgColor.g, windowBgColor.b, windowBgColor.a);
     SDL_RenderClear(renderer);
 
-    window->render(windowWidth, windowHeight);
+    window->render(window->getWidth(), window->getHeight());
     Element *child = window->getChild(0);
     child->setWidth(100, Unit::PERCENT);
 

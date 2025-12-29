@@ -21,6 +21,11 @@ class StyleApplier;
 class Painter;
 class StyleComputer;
 
+/**The Element class represents a UI component with properties for layout, style, parent-child relationships,
+ *  and event handling, supporting rendering, style management, and interaction within a graphical user interface system.
+ *  It provides methods for manipulating its appearance, hierarchy, and responding to user actions such as clicks and window resizing.
+
+ */
 class Element
 {
 public:
@@ -29,55 +34,74 @@ public:
 
     // Flags
     bool layoutDirty = true;
-    // TODO: Still useless
+    // TODO: Useless for now
     // bool paintDirty = true;
     // bool textDirty = true;
 
+    // Pointer to element's parent
     Element *parent = nullptr;
+    // Pointer to element's prevSibling
     Element *prevSibling = nullptr;
-    // TTF_Font *font = nullptr;
-    // FontManager *fontManager = nullptr;
+    // TODO: Pointer to element's nextSibling
+    Element *nextSibling = nullptr;
 
+    // Pointer to element's styleApplier for modifying Element's style from unordered map
     StyleApplier *styleApplier = nullptr;
+    // Pointer to element's painter for rendering the Element
     Painter *painter = nullptr;
+    // Pointer to element's styleComputer for computing Element's style into computed style
     StyleComputer *styleComputer = nullptr;
 
+    // Element's style
     Style style;
+    // Computed element's style
     ComputedStyle computedStyle;
-
-    std::string id, className, text;
-
-    std::vector<std::unique_ptr<Element>> children;
-    std::vector<Element *> getSortedChildren();
-
-    void render(float windowWidth, float windowHeight);
-
+    /** Adds the specified StyleDef object to the Element, allowing the element to incorporate or update its styling properties based on the provided style definition. */
     void addStyle(StyleDef &styleDef);
+
+    // For identifying element during elements query
+    std::string id, className;
+    // Element's text content
+    std::string text;
+
+    /** Calls computing and painting functions */
+    void render(float windowWidth, float windowHeight);
 
     // void updateLayout(float newWindowWidth, float newWindowHeight);
     //  void setFontSize(int size);
 
+    // Elements children
+    std::vector<std::unique_ptr<Element>> children;
+    /** Returns elements sorted by zIndex */
+    std::vector<Element *> getSortedChildren();
+    /** Adds a child element to this element's children */
     void addChild(std::unique_ptr<Element> child);
+    /** Adds multiple child elements to this element's children */
     template <typename... Args>
     void addManyChild(Args &&...args)
     {
         (addChild(std::forward<Args>(args)), ...);
     }
+    // TODO:
     Element *getChild(int index),
         *getChildByClassName(std::string className),
         *getChildByID(std::string id);
 
-    // click event
+    // TODO:
+    //  click event
     void click(int mouseX, int mouseY);
     std::function<void()> onClick = nullptr;
 
-    // resize event
+    // TODO:
+    //  resize event
     void handleResize(float newWindowWidth, float newWindowHeight);
 
+    /** Checks if the given coordinates are inside the element */
     bool isInside(int mouseX, int mouseY);
+    /** Checks if the given coordinates are inside the specified element */
     bool isInsideElement(int mouseX, int mouseY, Element *element);
 
-    // Style Setters
+    // Style setters for element's style
     void setWidth(float value, Unit unit = Unit::PX);
     void setHeight(float value, Unit unit = Unit::PX);
     void setX(float value, Unit unit = Unit::PX);
@@ -97,6 +121,7 @@ public:
     float getWidth() const { return computedStyle.width; }
     float getHeight() const { return computedStyle.height; }
 
+    /** Returns the UIType value representing the type of the Element  */
     UIType getType() const { return type; }
 
 private:

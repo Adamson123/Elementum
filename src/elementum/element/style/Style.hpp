@@ -3,19 +3,24 @@
 #include <unordered_map>
 #include <SDL.h>
 
+/** Represents a collection of style properties as key-value pairs */
 using StyleDef = std::unordered_map<std::string, std::string>;
 
+/** Represents measurement units for style properties */
 enum class Unit
 {
     PX,
     PERCENT
 };
+
+/** Represents the starting position for layout calculations */
 enum class StartPosition
 {
     PARENT,
     PREV_SIBLING
 };
 
+/** Represents measurement units for different style properties */
 struct Units
 {
     Unit width = Unit::PX;
@@ -25,7 +30,8 @@ struct Units
     Unit borderWidth = Unit::PX;
 };
 
-struct Style
+/** Represents a collection of style properties and their values */
+class Style
 {
 private:
     SDL_Color backgroundColor = {0, 0, 0, 0},

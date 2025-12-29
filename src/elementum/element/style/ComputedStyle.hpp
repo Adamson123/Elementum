@@ -1,5 +1,6 @@
 #pragma once
 
+/** Represents the computed style properties of an element after applying all style rules and calculations */
 class ComputedStyle
 {
 private:

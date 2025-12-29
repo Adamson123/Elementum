@@ -13,6 +13,7 @@ Elementum::Elementum(float windowWidth, float windowHeight, SDL_Renderer *render
     styleApplier = std::make_unique<StyleApplier>();
     painter = std::make_unique<Painter>();
     styleComputer = std::make_unique<StyleComputer>();
+
     this->renderer = renderer;
     painter->renderer = renderer;
     painter->fontManager = fontManager.get();
