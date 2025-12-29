@@ -4,7 +4,7 @@
 class Widget;
 
 /**
- * The Window class, derived from Element, represents a UI window that can contain child widgets, track which element was clicked, and handle click events at specific coordinates.
+ * The Window class, derived from Element, represents a UI window that can contain child widgets, track user interactions like clicks.
  *  It provides methods for creating widgets as children and maintains its type as UIType::WINDOW.
  *
  */
