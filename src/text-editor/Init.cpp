@@ -7,24 +7,10 @@
 void Elementum::Init()
 {
 
-    StyleDef tmp = {
-        {"backgroundColor", "31,31,31,255"}};
-    window->addStyle(tmp);
+    window->className = "Window";
+    window->setBackgroundColor({31, 31, 31, 255});
 
-    window->className = "Window_";
-
-    // PX by default
-    auto element = window->createWidget();
-    element->className = "brown";
-    element->text = "I am saying helloooo\n ggggggggg";
-
-    auto elementChild = window->createWidget();
-    elementChild->className = "black";
-
-    auto elementChildChild = window->createWidget();
-    elementChildChild->className = "child_Child";
-
-    StyleDef InputType = {
+    StyleDef Style1 = {
         {"color", "0,255,125,255"},
         {"backgroundColor", "0,25,125,255"},
         {"x", "0px"},
@@ -33,22 +19,37 @@ void Elementum::Init()
         {"y", "10%"},
     };
 
-    element->addStyle(InputType);
+    auto element = window->createWidget();
+    element->className = "element";
+    element->text = "Element says hello user";
+    element->addStyle(Style1);
 
-    StyleDef InputType2 = InputType;
-    InputType2["backgroundColor"] = "120,0,25,255";
-    InputType2["x"] = "50px";
-    InputType2["width"] = "30%";
+    Style1["backgroundColor"] = "0,55,0,255";
+    Style1["color"] = "222,55,0,255";
+    Style1["width"] = "150px";
+    Style1["height"] = "150px";
+    Style1["x"] = "20px";
 
-    elementChild->addStyle(InputType2);
-    InputType["backgroundColor"] = "120,0,125,255";
-    InputType["width"] = "20px";
-    InputType["startX"] = "prevSibling";
+    auto element2 = window->createWidget();
+    element2->className = "element2";
+    element2->text = element2->className;
+    element2->addStyle(Style1);
 
-    elementChildChild->addStyle(InputType);
+    auto element3 = window->createWidget();
+    element3->className = "element3";
+    element3->text = element3->className;
+    element3->addStyle(Style1);
+
+    Style1["y"] = "20px";
+    auto element4 = window->createWidget();
+    element4->className = "element4";
+    element4->text = element4->className;
+    element4->addStyle(Style1);
+    element4->setStartX(StartPosition::PARENT);
+    element4->setStartY(StartPosition::PREV_SIBLING);
 
     {
-        element->addManyChild(std::move(elementChild), std::move(elementChildChild));
+        element->addManyChild(std::move(element2), std::move(element3), std::move(element4));
         window->addManyChild(std::move(element));
     }
 }

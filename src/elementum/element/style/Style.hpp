@@ -45,7 +45,7 @@ private:
         borderWidth,
         fontSize = 25;
 
-    StartPosition startX = StartPosition::PARENT, startY = StartPosition::PARENT;
+    StartPosition startX = StartPosition::PREV_SIBLING, startY = StartPosition::PARENT;
 
     Units unit;
 
