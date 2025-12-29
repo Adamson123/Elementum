@@ -12,13 +12,6 @@ struct Size
     float height;
 };
 
-/** Represents a structure that stores the starting position coordinates with two floating-point members: startX and startY. */
-struct ComputedStartPos
-{
-    float startX;
-    float startY;
-};
-
 class Element;
 
 /**
@@ -31,6 +24,8 @@ public:
     void compute(Element *element, float currentWindowWidth, float currentWindowHeight);
 
 private:
+    /** Computes the start position of the element based on the current window dimensions. */
+    void computeStartPosition(Element *element, float currentWindowWidth, float currentWindowHeight);
     /** Computes the position of the element based on the current window dimensions. */
     void computePosition(Element *element, float currentWindowWidth, float currentWindowHeight);
     /** Computes the size of the element based on the current window dimensions. */
@@ -39,13 +34,12 @@ private:
     void computeBorderWidth(Element *element);
 
     // Calculator functions will return computed values
+    /** Calculates the start position of the element based on the current window dimensions. */
+    Position calculateStartPosition(Element *element, float currentWindowWidth, float currentWindowHeight);
     /** Calculates the position of the element based on the current window dimensions. */
     Position calculatePosition(Element *element, float currentWindowWidth, float currentWindowHeight);
     /** Calculates the size of the element based on the current window dimensions. */
     Size calculateSize(Element *element, float currentWindowWidth, float currentWindowHeight);
-    /** Calculates the start position of the element based on the current window dimensions. */
-    ComputedStartPos calculateStartPosition(Element *element, float currentWindowWidth, float currentWindowHeight);
-
     /** Calculates the border width of the element based on its styles. */
     float calculateBorderWidth(Element *element);
 };

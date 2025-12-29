@@ -1,7 +1,7 @@
 #include "StyleComputer.hpp"
 #include "../../Element.hpp"
 
-ComputedStartPos StyleComputer::calculateStartPosition(Element *element, float currentWindowWidth, float currentWindowHeight)
+Position StyleComputer::calculateStartPosition(Element *element, float currentWindowWidth, float currentWindowHeight)
 {
     Element *parent = element->parent;
     Element *prevSibling = element->prevSibling;
@@ -25,9 +25,9 @@ ComputedStartPos StyleComputer::calculateStartPosition(Element *element, float c
     float prevSiblingX = element->prevSibling ? prevSibling->computedStyle.x + prevSibling->computedStyle.width : 0.f;
     float prevSiblingY = element->prevSibling ? prevSibling->computedStyle.y + prevSibling->computedStyle.height : 0.f;
 
-    ComputedStartPos startPos;
-    startPos.startX = computeAxis(element->style.getStartX(), parentX, prevSiblingX, 0.f);
-    startPos.startY = computeAxis(element->style.getStartY(), parentY, prevSiblingY, 0.f);
+    Position startPos;
+    startPos.x = computeAxis(element->style.getStartX(), parentX, prevSiblingX, 0.f);
+    startPos.y = computeAxis(element->style.getStartY(), parentY, prevSiblingY, 0.f);
     return startPos;
 }
 
@@ -44,14 +44,11 @@ Position StyleComputer::calculatePosition(Element *element, float currentWindowW
             if (parent)
                 return startPos + (value / 100.f) * parentSize;
             else
-                return (value / 100.f) * windowSize;
+                return startPos + (value / 100.f) * windowSize;
         }
         else // px
         {
-            if (parent)
-                return startPos + value;
-            else
-                return value;
+            return startPos + value;
         }
     };
 
@@ -60,11 +57,11 @@ Position StyleComputer::calculatePosition(Element *element, float currentWindowW
     float parentWidth = parent ? parent->computedStyle.width : currentWindowWidth;
     float parentHeight = parent ? parent->computedStyle.height : currentWindowHeight;
 
-    ComputedStartPos startPos = calculateStartPosition(element, currentWindowWidth, currentWindowHeight);
+    // ComputedStartPos startPos = calculateStartPosition(element, currentWindowWidth, currentWindowHeight);
 
     Position pos;
-    pos.x = computeAxis(element->style.x, element->style.unit.x, startPos.startX, parentWidth, currentWindowWidth);
-    pos.y = computeAxis(element->style.y, element->style.unit.y, startPos.startY, parentHeight, currentWindowHeight);
+    pos.x = computeAxis(element->style.x, element->style.unit.x, element->computedStyle.x, parentWidth, currentWindowWidth);
+    pos.y = computeAxis(element->style.y, element->style.unit.y, element->computedStyle.y, parentHeight, currentWindowHeight);
     return pos;
 }
 
