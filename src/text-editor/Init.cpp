@@ -12,7 +12,7 @@ void Elementum::Init()
 
     StyleDef Style1 = {
         {"color", "0,255,125,255"},
-        {"backgroundColor", "0,25,125,255"},
+        {"backgroundColor", "20,20,20,255"},
         {"x", "0px"},
         {"width", "70%"},
         {"height", "80%"},
@@ -24,7 +24,7 @@ void Elementum::Init()
     element->text = "Element says hello user";
     element->addStyle(Style1);
 
-    Style1["backgroundColor"] = "0,55,0,255";
+    Style1["backgroundColor"] = "31,31,31,255";
     Style1["color"] = "222,55,0,255";
     Style1["width"] = "150px";
     Style1["height"] = "150px";
