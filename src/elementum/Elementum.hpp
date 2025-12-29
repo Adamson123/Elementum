@@ -49,11 +49,11 @@ public:
     /*
      * @brief Gets initial window width that was set by the user
      */
-    float GetInitialWindowWidth() const { return windowWidth; }
+    float GetWindowWidth() const { return windowWidth; }
     /*
      * @brief Gets initial window height that was set by the user
      */
-    float GetInitialWindowHeight() const { return windowHeight; }
+    float GetWindowHeight() const { return windowHeight; }
 
     // Manager components
     std::unique_ptr<FontManager> fontManager;
