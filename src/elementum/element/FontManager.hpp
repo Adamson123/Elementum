@@ -4,20 +4,18 @@
 #include <SDL_ttf.h>
 #include <iostream>
 
-using namespace std;
-
 class FontManager
 {
 public:
-    TTF_Font *get(const string &path, int size)
+    TTF_Font *get(const std::string &path, int size)
     {
-        auto key = path + to_string(size);
+        auto key = path + std::to_string(size);
 
         if (!fonts.count(key))
         {
             fonts[key] = TTF_OpenFont(path.c_str(), size);
             if (!fonts[key])
-                cout << TTF_GetError() << endl;
+                std::cout << TTF_GetError() << std::endl;
         }
 
         // cout << "Fonts length :" + to_string(fonts.size()) << endl;
@@ -40,5 +38,5 @@ public:
     // }
 
 private:
-    unordered_map<string, TTF_Font *> fonts;
+    std::unordered_map<std::string, TTF_Font *> fonts;
 };

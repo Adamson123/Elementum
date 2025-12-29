@@ -5,16 +5,14 @@
 #include "../../Element.hpp"
 #include "../Style.hpp"
 
-using namespace std;
-
-using StyleHandler = function<void(Element *element, const string &)>;
+using StyleHandler = std::function<void(Element *element, const std::string &)>;
 
 class Element;
 
 class StyleApplier
 {
 private:
-    unordered_map<string, StyleHandler> handlers;
+    std::unordered_map<std::string, StyleHandler> handlers;
 
 public:
     StyleApplier();

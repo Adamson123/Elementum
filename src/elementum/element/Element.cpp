@@ -7,8 +7,6 @@
 #include "./painter/Painter.hpp"
 #include "./style/style-computer/StyleComputer.hpp"
 
-using namespace std;
-
 Element::Element(float x, float y, float width, float height)
 {
     style.x = x;
@@ -17,14 +15,14 @@ Element::Element(float x, float y, float width, float height)
     style.height = height;
 };
 
-vector<Element *> Element::getSortedChildren()
+std::vector<Element *> Element::getSortedChildren()
 {
-    vector<Element *> sorted;
+    std::vector<Element *> sorted;
 
     for (auto &child : children)
         sorted.push_back(child.get());
 
-    stable_sort(
+    std::stable_sort(
         sorted.begin(),
         sorted.end(),
         [](const Element *a, const Element *b)
@@ -47,7 +45,7 @@ void Element::render(float windowWidth, float windowHeight)
 
     if (children.size() > 0)
     {
-        vector<Element *> sorted = getSortedChildren();
+        std::vector<Element *> sorted = getSortedChildren();
 
         for (auto &child : sorted)
         {
@@ -70,7 +68,7 @@ void Element::addStyle(StyleDef &styleDef)
     }
 }
 
-void Element::addChild(unique_ptr<Element> child)
+void Element::addChild(std::unique_ptr<Element> child)
 {
     child->parent = this;
     if (!children.empty())

@@ -45,10 +45,10 @@ public:
     Style style;
     ComputedStyle computedStyle;
 
-    string id, className, text;
+    std::string id, className, text;
 
-    vector<unique_ptr<Element>> children;
-    vector<Element *> getSortedChildren();
+    std::vector<std::unique_ptr<Element>> children;
+    std::vector<Element *> getSortedChildren();
 
     void render(float windowWidth, float windowHeight);
 
@@ -57,19 +57,19 @@ public:
     // void updateLayout(float newWindowWidth, float newWindowHeight);
     //  void setFontSize(int size);
 
-    void addChild(unique_ptr<Element> child);
+    void addChild(std::unique_ptr<Element> child);
     template <typename... Args>
     void addManyChild(Args &&...args)
     {
         (addChild(std::forward<Args>(args)), ...);
     }
     Element *getChild(int index),
-        *getChildByClassName(string className),
-        *getChildByID(string id);
+        *getChildByClassName(std::string className),
+        *getChildByID(std::string id);
 
     // click event
     void click(int mouseX, int mouseY);
-    function<void()> onClick = nullptr;
+    std::function<void()> onClick = nullptr;
 
     // resize event
     void handleResize(float newWindowWidth, float newWindowHeight);

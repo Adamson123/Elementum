@@ -3,8 +3,6 @@
 #include <SDL_ttf.h>
 #include <memory>
 
-using namespace std;
-
 class FontManager;
 class Window;
 class StyleApplier;
@@ -25,10 +23,10 @@ public:
     void End();
     void Event(SDL_Event *event);
 
-    unique_ptr<FontManager> fontManager;
-    unique_ptr<Window> window;
-    unique_ptr<StyleApplier> styleApplier;
-    unique_ptr<Painter> painter;
-    unique_ptr<StyleComputer> styleComputer;
+    std::unique_ptr<FontManager> fontManager;
+    std::unique_ptr<Window> window;
+    std::unique_ptr<StyleApplier> styleApplier;
+    std::unique_ptr<Painter> painter;
+    std::unique_ptr<StyleComputer> styleComputer;
     SDL_Renderer *renderer;
 };

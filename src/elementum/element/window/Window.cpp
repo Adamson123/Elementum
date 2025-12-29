@@ -4,13 +4,11 @@
 #include "../Element.hpp"
 #include "../widget/Widget.hpp"
 
-using namespace std;
-
 Window::Window(float x, float y, float width, float height) : Element(x, y, width, height) {}
 
-unique_ptr<Widget> Window::createWidget(float x, float y, float width, float height)
+std::unique_ptr<Widget> Window::createWidget(float x, float y, float width, float height)
 {
-    auto widget = make_unique<Widget>(x, y, width, height);
+    auto widget = std::make_unique<Widget>(x, y, width, height);
 
     widget->window = this;
     widget->styleApplier = styleApplier;
@@ -22,7 +20,7 @@ unique_ptr<Widget> Window::createWidget(float x, float y, float width, float hei
 
 void Window::handleClickWithIn(float mouseX, float mouseY)
 {
-    vector<Element *> sortedChildren = getSortedChildren();
+    std::vector<Element *> sortedChildren = getSortedChildren();
 
     for (auto &child : sortedChildren)
     {
@@ -34,7 +32,7 @@ void Window::handleClickWithIn(float mouseX, float mouseY)
 
     if (clickedElement)
     {
-        cout << "From " + clickedElement->className << endl;
+        std::cout << "From " + clickedElement->className << std::endl;
         if (auto clickedWidget = dynamic_cast<Widget *>(clickedElement))
         {
             clickedWidget->propagateClick();
@@ -43,7 +41,7 @@ void Window::handleClickWithIn(float mouseX, float mouseY)
     }
     else
     {
-        cout << "No Widgets were clicked" << endl;
+        std::cout << "No Widgets were clicked" << std::endl;
         if (onClick)
             onClick();
     }

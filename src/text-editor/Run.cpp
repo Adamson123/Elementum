@@ -19,12 +19,12 @@ void Elementum::Run()
 
     child->onClick = [=]()
     {
-        cout << child->className + " widget function was executed" << endl;
+        std::cout << child->className + " widget function was executed" << std::endl;
     };
 
     window->onClick = [=]()
     {
-        cout << window->className + " function was executed" << endl;
+        std::cout << window->className + " function was executed" << std::endl;
     };
 
     SDL_RenderPresent(renderer);

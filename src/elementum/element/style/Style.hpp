@@ -3,9 +3,7 @@
 #include <unordered_map>
 #include <SDL.h>
 
-using namespace std;
-
-using StyleDef = unordered_map<string, string>;
+using StyleDef = std::unordered_map<std::string, std::string>;
 
 enum class Unit
 {
@@ -34,7 +32,7 @@ private:
               color = {255, 255, 255, 255},
               borderColor = {0, 255, 0, 0};
 
-    string
+    std::string
         fontFamily = "fonts/arial.ttf";
 
     int zIndex = 0;
@@ -63,7 +61,7 @@ public:
     SDL_Color getBackgroundColor() const { return backgroundColor; }
     SDL_Color getBorderColor() const { return borderColor; }
 
-    string getFontFamily() const { return fontFamily; }
+    std::string getFontFamily() const { return fontFamily; }
     int getZIndex() const { return zIndex; }
 
     float getWidth() const { return width; }
