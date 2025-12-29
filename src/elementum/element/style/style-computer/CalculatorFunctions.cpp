@@ -1,5 +1,6 @@
 #include "StyleComputer.hpp"
 #include "../../Element.hpp"
+#include <optional>
 
 Position StyleComputer::calculateStartPosition(Element *element, float currentWindowWidth, float currentWindowHeight)
 {
@@ -35,20 +36,20 @@ Position StyleComputer::calculatePosition(Element *element, float currentWindowW
 {
     Element *parent = element->parent;
 
-    auto computeAxis = [&](float value, Unit unit, float startPos, float parentSize, float windowSize) -> float
+    auto computeAxis = [&](std::optional<float> value, Unit unit, float startPos, float parentSize, float windowSize) -> float
     {
         // If the unit is percent, calculate based on parent position and size or window size
         // If the unit is px, add directly to parent position
         if (unit == Unit::PERCENT)
         {
             if (parent)
-                return startPos + (value / 100.f) * parentSize;
+                return startPos + (value.value_or(0.f) / 100.f) * parentSize;
             else
-                return startPos + (value / 100.f) * windowSize;
+                return startPos + (value.value_or(0.f) / 100.f) * windowSize;
         }
         else // px
         {
-            return startPos + value;
+            return startPos + value.value_or(0.f);
         }
     };
 
@@ -69,20 +70,20 @@ Size StyleComputer::calculateSize(Element *element, float currentWindowWidth, fl
 {
     Element *parent = element->parent;
 
-    auto computeAxis = [&](float value, Unit unit, float parentSize, float windowSize) -> float
+    auto computeAxis = [&](std::optional<float> value, Unit unit, float parentSize, float windowSize) -> float
     {
         // If the unit is percent, calculate based on parent size or window size
         // If the unit is px, return the value directly
         if (unit == Unit::PERCENT)
         {
             if (parent)
-                return (value / 100) * parentSize;
+                return (value.value_or(0.f) / 100) * parentSize;
             else
-                return (value / 100) * windowSize;
+                return (value.value_or(0.f) / 100) * windowSize;
         }
         else
         {
-            return value;
+            return value.value_or(0.f);
         }
     };
 
@@ -99,16 +100,16 @@ float StyleComputer::calculateBorderWidth(Element *element)
 {
     Element *parent = element->parent;
 
-    float value = element->style.borderWidth;
+    std::optional<float> value = element->style.borderWidth;
     Unit unit = element->style.unit.borderWidth;
 
     if (unit == Unit::PERCENT)
     {
         float parentSize = parent ? (parent->computedStyle.width + parent->computedStyle.height) / 2.f : (element->computedStyle.width + element->computedStyle.height) / 2.f;
-        return (value / 100.f) * parentSize;
+        return (value.value_or(0.f) / 100.f) * parentSize;
     }
     else
     {
-        return value;
+        return value.value_or(0.f);
     }
 }

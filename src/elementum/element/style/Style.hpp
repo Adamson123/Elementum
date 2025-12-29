@@ -2,6 +2,7 @@
 #include <string>
 #include <unordered_map>
 #include <SDL.h>
+#include <optional>
 
 /** Represents a collection of style properties as key-value pairs */
 using StyleDef = std::unordered_map<std::string, std::string>;
@@ -43,13 +44,14 @@ private:
 
     int zIndex = 0;
 
-    float
+    std::optional<float>
         x,
         y,
         width,
         height,
-        borderWidth,
-        fontSize = 25;
+        borderWidth = NULL;
+
+    int fontSize = 25;
 
     StartPosition startX = StartPosition::PREV_SIBLING, startY = StartPosition::PARENT;
 
@@ -70,12 +72,12 @@ public:
     std::string getFontFamily() const { return fontFamily; }
     int getZIndex() const { return zIndex; }
 
-    float getWidth() const { return width; }
-    float getHeight() const { return height; }
-    float getX() const { return x; }
-    float getY() const { return y; }
-    float getBorderWidth() const { return borderWidth; }
-    float getFontSize() const { return fontSize; }
+    std::optional<float> getWidth() const { return width; }
+    std::optional<float> getHeight() const { return height; }
+    std::optional<float> getX() const { return x; }
+    std::optional<float> getY() const { return y; }
+    std::optional<float> getBorderWidth() const { return borderWidth; }
+    int getFontSize() const { return fontSize; }
 
     StartPosition getStartX() const { return startX; }
     StartPosition getStartY() const { return startY; }
