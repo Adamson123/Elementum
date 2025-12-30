@@ -15,10 +15,18 @@ enum class Unit
 };
 
 /** Represents the starting position for layout calculations */
-enum class StartPosition
+// enum class StartPosition
+// {
+//     PARENT,
+//     PREV_SIBLING
+// };
+
+enum class Display
 {
-    PARENT,
-    PREV_SIBLING
+    INLINE_BLOCK,
+    BLOCK,
+    FLEX, // future
+    NONE
 };
 
 /** Represents measurement units for different style properties */
@@ -53,7 +61,8 @@ private:
 
     int fontSize = 25;
 
-    StartPosition startX = StartPosition::PREV_SIBLING, startY = StartPosition::PARENT;
+    // StartPosition startX = StartPosition::PREV_SIBLING, startY = StartPosition::PARENT;
+    Display display = Display::INLINE_BLOCK;
 
     Units unit;
 
@@ -79,6 +88,7 @@ public:
     std::optional<float> getBorderWidth() const { return borderWidth; }
     int getFontSize() const { return fontSize; }
 
-    StartPosition getStartX() const { return startX; }
-    StartPosition getStartY() const { return startY; }
+    Display getDisplay() const { return display; }
+    // StartPosition getStartX() const { return startX; }
+    // StartPosition getStartY() const { return startY; }
 };

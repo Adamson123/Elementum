@@ -69,15 +69,15 @@ ParsedValue parseValue(const std::string &v)
 }
 
 // With callback
-void setStartPosition(const std::string &v, std::function<void(StartPosition)> setter)
-{
-    if (v == "parent")
-        setter(StartPosition::PARENT);
-    else if (v == "prevSibling")
-        setter(StartPosition::PREV_SIBLING);
-    else
-        throw std::runtime_error("Invalid value for start position: " + v);
-}
+// void setStartPosition(const std::string &v, std::function<void(StartPosition)> setter)
+// {
+//     if (v == "parent")
+//         setter(StartPosition::PARENT);
+//     else if (v == "prevSibling")
+//         setter(StartPosition::PREV_SIBLING);
+//     else
+//         throw std::runtime_error("Invalid value for start position: " + v);
+// }
 
 StyleApplier::StyleApplier()
 {
@@ -147,18 +147,33 @@ StyleApplier::StyleApplier()
     };
 
     //
-    handlers["startX"] = [](Element *element, const std::string &v)
+    handlers["display"] = [](Element *element, const std::string &v)
     {
-        setStartPosition(v, [&](StartPosition pos)
-                         { element->setStartX(pos); });
+        if (v == "inline-block")
+            element->setDisplay(Display::INLINE_BLOCK);
+        else if (v == "block")
+            element->setDisplay(Display::BLOCK);
+        else if (v == "flex")
+            element->setDisplay(Display::FLEX);
+        else if (v == "none")
+            element->setDisplay(Display::NONE);
+        else
+            throw std::runtime_error("Invalid value for display: " + v);
     };
 
-    //
-    handlers["startY"] = [](Element *element, const std::string &v)
-    {
-        setStartPosition(v, [&](StartPosition pos)
-                         { element->setStartY(pos); });
-    };
+    // //
+    // handlers["startX"] = [](Element *element, const std::string &v)
+    // {
+    //     setStartPosition(v, [&](StartPosition pos)
+    //                      { element->setStartX(pos); });
+    // };
+
+    // //
+    // handlers["startY"] = [](Element *element, const std::string &v)
+    // {
+    //     setStartPosition(v, [&](StartPosition pos)
+    //                      { element->setStartY(pos); });
+    // };
 }
 
 void StyleApplier::apply(Element *element, StyleDef &styles)

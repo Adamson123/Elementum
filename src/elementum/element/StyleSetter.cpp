@@ -71,15 +71,21 @@ void Element::setFontFamily(const std::string &family)
     // paintDirty = true;
     // textDirty = true;
 }
-
-void Element::setStartX(StartPosition startX)
+void Element::setDisplay(Display display)
 {
-    style.startX = startX;
+    style.display = display;
     layoutDirty = true;
+    // paintDirty = true;
 }
 
-void Element::setStartY(StartPosition startY)
-{
-    style.startY = startY;
-    layoutDirty = true;
-}
+// void Element::setStartX(StartPosition startX)
+// {
+//     style.startX = startX;
+//     layoutDirty = true;
+// }
+
+// void Element::setStartY(StartPosition startY)
+// {
+//     style.startY = startY;
+//     layoutDirty = true;
+// }

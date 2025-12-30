@@ -49,6 +49,10 @@ void Element::render(float windowWidth, float windowHeight)
 
         for (auto &child : sorted)
         {
+            // Skip rendering if display is NONE
+            if (child->style.display == Display::NONE)
+                continue;
+
             // Propagate layout dirty flag to children
             if (layoutDirty)
             {

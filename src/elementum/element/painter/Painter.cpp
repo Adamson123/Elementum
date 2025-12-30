@@ -12,6 +12,9 @@ void Painter::paint(Element *element)
         throw std::runtime_error("No renderer was attached");
     }
 
+    // if (element->style.display == Display::NONE)
+    //     return;
+
     paintBackground(element);
     paintText(element);
     paintBorder(element);

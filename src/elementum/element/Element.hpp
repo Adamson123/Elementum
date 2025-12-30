@@ -112,8 +112,9 @@ public:
     void setBorderWidth(float value, Unit unit = Unit::PX);
     void setFontSize(int size);
     void setFontFamily(const std::string &family);
-    void setStartX(StartPosition startX);
-    void setStartY(StartPosition startY);
+    // void setStartX(StartPosition startX);
+    // void setStartY(StartPosition startY);
+    void setDisplay(Display display);
 
     // Computed size and position getters
     float getX() const { return computedStyle.x; }

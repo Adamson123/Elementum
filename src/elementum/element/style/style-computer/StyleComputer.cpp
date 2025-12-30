@@ -3,18 +3,19 @@
 
 void StyleComputer::compute(Element *element, float currentWindowWidth, float currentWindowHeight)
 {
-    computeStartPosition(element, currentWindowWidth, currentWindowHeight);
+    // computeStartPosition(element, currentWindowWidth, currentWindowHeight);
     computePosition(element, currentWindowWidth, currentWindowHeight);
     computeSize(element, currentWindowWidth, currentWindowHeight);
+    computeDisplay(element, currentWindowWidth, currentWindowHeight);
     computeBorderWidth(element);
 }
 
-void StyleComputer::computeStartPosition(Element *element, float currentWindowWidth, float currentWindowHeight)
-{
-    Position pos = calculateStartPosition(element, currentWindowWidth, currentWindowHeight);
-    element->computedStyle.x = pos.x;
-    element->computedStyle.y = pos.y;
-}
+// void StyleComputer::computeStartPosition(Element *element, float currentWindowWidth, float currentWindowHeight)
+// {
+//     Position pos = calculateStartPosition(element, currentWindowWidth, currentWindowHeight);
+//     element->computedStyle.x = pos.x;
+//     element->computedStyle.y = pos.y;
+// }
 
 void StyleComputer::computePosition(Element *element, float currentWindowWidth, float currentWindowHeight)
 {
@@ -28,6 +29,21 @@ void StyleComputer::computeSize(Element *element, float currentWindowWidth, floa
     Size size = calculateSize(element, currentWindowWidth, currentWindowHeight);
     element->computedStyle.width = size.width;
     element->computedStyle.height = size.height;
+}
+
+void StyleComputer::computeDisplay(Element *element, float currentWindowWidth, float currentWindowHeight)
+{
+    Position pos = calculateDisplay(element, currentWindowWidth, currentWindowHeight);
+    // if (element->style.display == Display::NONE)
+    // {
+    //     element->computedStyle.x = 0;
+    //     element->computedStyle.y = 0;
+    //     element->computedStyle.width = 0;
+    //     element->computedStyle.height = 0;
+    //     return;
+    // }
+    element->computedStyle.x = pos.x;
+    element->computedStyle.y = pos.y;
 }
 
 void StyleComputer::computeBorderWidth(Element *element)

@@ -2,54 +2,54 @@
 #include "../../Element.hpp"
 #include <optional>
 
-Position StyleComputer::calculateStartPosition(Element *element, float currentWindowWidth, float currentWindowHeight)
-{
-    Element *parent = element->parent;
-    Element *prevSibling = element->prevSibling;
+// Position StyleComputer::calculateStartPosition(Element *element, float currentWindowWidth, float currentWindowHeight)
+// {
+//     // Element *parent = element->parent;
+//     // Element *prevSibling = element->prevSibling;
 
-    auto computeAxis = [&](StartPosition startPos, float parentPos, float prevSiblingPos, float windowPos) -> float
-    {
-        switch (startPos)
-        {
-        case StartPosition::PARENT:
-            return parent ? parentPos : 0.f;
-        case StartPosition::PREV_SIBLING:
-            return prevSiblingPos;
-        default:
-            return 0.f;
-        }
-    };
+//     // auto computeAxis = [&](StartPosition startPos, float parentPos, float prevSiblingPos, float windowPos) -> float
+//     // {
+//     //     switch (startPos)
+//     //     {
+//     //     case StartPosition::PARENT:
+//     //         return parent ? parentPos : 0.f;
+//     //     case StartPosition::PREV_SIBLING:
+//     //         return prevSiblingPos;
+//     //     default:
+//     //         return 0.f;
+//     //     }
+//     // };
 
-    float parentX = parent ? parent->computedStyle.x : 0.f;
-    float parentY = parent ? parent->computedStyle.y : 0.f;
+//     // float parentX = parent ? parent->computedStyle.x : 0.f;
+//     // float parentY = parent ? parent->computedStyle.y : 0.f;
 
-    float prevSiblingX = element->prevSibling ? prevSibling->computedStyle.x + prevSibling->computedStyle.width : 0.f;
-    float prevSiblingY = element->prevSibling ? prevSibling->computedStyle.y + prevSibling->computedStyle.height : 0.f;
+//     // float prevSiblingX = element->prevSibling ? prevSibling->computedStyle.x + prevSibling->computedStyle.width : 0.f;
+//     // float prevSiblingY = element->prevSibling ? prevSibling->computedStyle.y + prevSibling->computedStyle.height : 0.f;
 
-    Position startPos;
-    startPos.x = computeAxis(element->style.getStartX(), parentX, prevSiblingX, 0.f);
-    startPos.y = computeAxis(element->style.getStartY(), parentY, prevSiblingY, 0.f);
-    return startPos;
-}
+//     Position startPos;
+//     startPos.x = 0;
+//     startPos.y = 0;
+//     return startPos;
+// }
 
 Position StyleComputer::calculatePosition(Element *element, float currentWindowWidth, float currentWindowHeight)
 {
     Element *parent = element->parent;
 
-    auto computeAxis = [&](std::optional<float> value, Unit unit, float startPos, float parentSize, float windowSize) -> float
+    auto computeAxis = [&](std::optional<float> value, Unit unit, float parentSize, float windowSize) -> float
     {
         // If the unit is percent, calculate based on parent position and size or window size
         // If the unit is px, add directly to parent position
         if (unit == Unit::PERCENT)
         {
             if (parent)
-                return startPos + (value.value_or(0.f) / 100.f) * parentSize;
+                return (value.value_or(0.f) / 100.f) * parentSize;
             else
-                return startPos + (value.value_or(0.f) / 100.f) * windowSize;
+                return (value.value_or(0.f) / 100.f) * windowSize;
         }
         else // px
         {
-            return startPos + value.value_or(0.f);
+            return value.value_or(0.f);
         }
     };
 
@@ -61,8 +61,8 @@ Position StyleComputer::calculatePosition(Element *element, float currentWindowW
     // ComputedStartPos startPos = calculateStartPosition(element, currentWindowWidth, currentWindowHeight);
 
     Position pos;
-    pos.x = computeAxis(element->style.x, element->style.unit.x, element->computedStyle.x, parentWidth, currentWindowWidth);
-    pos.y = computeAxis(element->style.y, element->style.unit.y, element->computedStyle.y, parentHeight, currentWindowHeight);
+    pos.x = computeAxis(element->style.x, element->style.unit.x, parentWidth, currentWindowWidth);
+    pos.y = computeAxis(element->style.y, element->style.unit.y, parentHeight, currentWindowHeight);
     return pos;
 }
 
@@ -94,6 +94,111 @@ Size StyleComputer::calculateSize(Element *element, float currentWindowWidth, fl
     size.width = computeAxis(element->style.width, element->style.unit.width, parentWidth, currentWindowWidth);
     size.height = computeAxis(element->style.height, element->style.unit.height, parentHeight, currentWindowHeight);
     return size;
+}
+
+Element *findPrevElementWithDisplay(Display display, Element *element)
+{
+    // Element *prevSibling = element->prevSibling;
+
+    // while (prevSibling && prevSibling->style.getDisplay() != display)
+    // {
+    //     prevSibling = prevSibling->prevSibling;
+    // }
+
+    // if (prevSibling->style.getDisplay() == display)
+    // {
+    //     return prevSibling;
+    // }
+    // return nullptr;
+
+    for (Element *sibling = element->prevSibling; sibling != nullptr; sibling = sibling->prevSibling)
+    {
+        if (sibling->style.getDisplay() == display)
+        {
+            return sibling;
+        }
+    }
+    return nullptr;
+}
+
+Element *findPrevElementThatIsNotWithDisplay(Display display, Element *element)
+{
+    for (Element *sibling = element->prevSibling; sibling != nullptr; sibling = sibling->prevSibling)
+    {
+        if (sibling->style.getDisplay() != display)
+        {
+            return sibling;
+        }
+    }
+    return nullptr;
+}
+
+Position StyleComputer::calculateDisplay(Element *element, float currentWindowWidth, float currentWindowHeight)
+{
+    Element *parent = element->parent;
+    Element *prevSibling = findPrevElementThatIsNotWithDisplay(Display::NONE, element); // element->prevSibling;
+
+    Display display = element->style.display;
+    Position pos;
+
+    float parentX = parent ? parent->computedStyle.x : 0;
+    float parentY = parent ? parent->computedStyle.y : 0;
+
+    float elementX = element->computedStyle.x;
+    float elementY = element->computedStyle.y;
+
+    // If no prevSibling, let start position default to parent
+    if (!prevSibling)
+    {
+        pos.x = elementX + parentX;
+        pos.y = elementY + parentY;
+    }
+    else
+    {
+        float prevSiblingRight = prevSibling->computedStyle.x + prevSibling->computedStyle.width;
+        float prevSiblingBottom = prevSibling->computedStyle.y + prevSibling->computedStyle.height;
+
+        Element *prevSiblingBlock = findPrevElementWithDisplay(Display::BLOCK, element);
+
+        // DISPLAY, INLINE_BLOCK
+        if (display == Display::INLINE_BLOCK)
+        {
+            // If prevSibling is inline block
+            if (prevSibling->style.display == Display::INLINE_BLOCK)
+            {
+                pos.x = elementX + prevSiblingRight;
+                // Element y should be relative to prev last block element bottom else to the parent y
+                pos.y = elementY + (prevSiblingBlock ? prevSiblingBlock->computedStyle.y + prevSiblingBlock->computedStyle.height : parentY);
+            }
+
+            // If prevSibling is block
+            if (prevSibling->style.display == Display::BLOCK)
+            {
+                pos.x = elementX + parentX;
+                pos.y = elementY + prevSiblingBottom;
+            }
+        }
+
+        // DISPLAY, BLOCK
+        if (display == Display::BLOCK)
+        {
+            if (!element->style.width.has_value())
+                element->computedStyle.width = parent ? (parent->computedStyle.width - elementX) : (currentWindowWidth - elementX);
+
+            pos.x = elementX + parentX;
+            pos.y = elementY + prevSiblingBottom;
+            // element->computedStyle.width = parent ? parent->computedStyle.width : currentWindowWidth;
+            // element->computedStyle.width = currentWindowWidth - (pos.x - parentX);
+        }
+
+        // DISPLAY, NONE
+        // if (display == Display::NONE)
+        // {
+        //     return pos;
+        // }
+    }
+
+    return pos;
 }
 
 float StyleComputer::calculateBorderWidth(Element *element)
