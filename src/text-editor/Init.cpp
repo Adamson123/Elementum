@@ -23,7 +23,7 @@ void Elementum::Init()
     // element->text = "Element says hello user";
     element->addStyle(Style1);
 
-    Style1["backgroundColor"] = "31,31,31,255";
+    Style1["backgroundColor"] = "40,40,40,255";
     Style1["color"] = "222,55,0,255";
     Style1["width"] = "150px";
     Style1["height"] = "150px";
@@ -34,12 +34,15 @@ void Elementum::Init()
     element2->className = "element2";
     element2->text = element2->className;
     element2->addStyle(Style1);
+    element2->setY(30.f);
+    element2->setX(70, Unit::PERCENT);
 
     auto element3 = window->createWidget();
     element3->className = "element3";
     element3->text = element3->className;
     element3->addStyle(Style1);
-    element3->setDisplay(Display::NONE);
+
+    // element3->setDisplay(Display::NONE);
 
     //    Style1["y"] = "20px";
     auto element4 = window->createWidget();
@@ -47,12 +50,18 @@ void Elementum::Init()
     element4->text = element4->className;
     element4->addStyle(Style1);
     element4->setDisplay(Display::BLOCK);
+
+    auto element5 = window->createWidget();
+    element5->className = "element5";
+    element5->text = element5->className;
+    element5->addStyle(Style1);
+    element5->setDisplay(Display::BLOCK);
     // element4->setWidth(200.f);
     //  element4->setStartX(StartPosition::PARENT);
     //  element4->setStartY(StartPosition::PREV_SIBLING);
 
     {
-        element->addManyChild(std::move(element2), std::move(element3), std::move(element4));
+        element->addManyChild(std::move(element2), std::move(element3), std::move(element4), std::move(element5));
         window->addManyChild(std::move(element));
     }
 }

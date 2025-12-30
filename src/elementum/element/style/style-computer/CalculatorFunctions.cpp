@@ -2,36 +2,6 @@
 #include "../../Element.hpp"
 #include <optional>
 
-// Position StyleComputer::calculateStartPosition(Element *element, float currentWindowWidth, float currentWindowHeight)
-// {
-//     // Element *parent = element->parent;
-//     // Element *prevSibling = element->prevSibling;
-
-//     // auto computeAxis = [&](StartPosition startPos, float parentPos, float prevSiblingPos, float windowPos) -> float
-//     // {
-//     //     switch (startPos)
-//     //     {
-//     //     case StartPosition::PARENT:
-//     //         return parent ? parentPos : 0.f;
-//     //     case StartPosition::PREV_SIBLING:
-//     //         return prevSiblingPos;
-//     //     default:
-//     //         return 0.f;
-//     //     }
-//     // };
-
-//     // float parentX = parent ? parent->computedStyle.x : 0.f;
-//     // float parentY = parent ? parent->computedStyle.y : 0.f;
-
-//     // float prevSiblingX = element->prevSibling ? prevSibling->computedStyle.x + prevSibling->computedStyle.width : 0.f;
-//     // float prevSiblingY = element->prevSibling ? prevSibling->computedStyle.y + prevSibling->computedStyle.height : 0.f;
-
-//     Position startPos;
-//     startPos.x = 0;
-//     startPos.y = 0;
-//     return startPos;
-// }
-
 Position StyleComputer::calculatePosition(Element *element, float currentWindowWidth, float currentWindowHeight)
 {
     Element *parent = element->parent;
@@ -98,19 +68,6 @@ Size StyleComputer::calculateSize(Element *element, float currentWindowWidth, fl
 
 Element *findPrevElementWithDisplay(Display display, Element *element)
 {
-    // Element *prevSibling = element->prevSibling;
-
-    // while (prevSibling && prevSibling->style.getDisplay() != display)
-    // {
-    //     prevSibling = prevSibling->prevSibling;
-    // }
-
-    // if (prevSibling->style.getDisplay() == display)
-    // {
-    //     return prevSibling;
-    // }
-    // return nullptr;
-
     for (Element *sibling = element->prevSibling; sibling != nullptr; sibling = sibling->prevSibling)
     {
         if (sibling->style.getDisplay() == display)
@@ -131,6 +88,24 @@ Element *findPrevElementThatIsNotWithDisplay(Display display, Element *element)
         }
     }
     return nullptr;
+}
+
+Element *findPrevElementMostClosestToBottom(Element *element)
+{
+    Element *closest = nullptr;
+    float closestBottom = -1.0f;
+
+    for (Element *sibling = element->prevSibling; sibling != nullptr; sibling = sibling->prevSibling)
+    {
+        float siblingBottom = sibling->getY() + sibling->getHeight();
+        if (siblingBottom > closestBottom)
+        {
+            closestBottom = siblingBottom;
+            closest = sibling;
+        }
+    }
+
+    return closest;
 }
 
 Position StyleComputer::calculateDisplay(Element *element, float currentWindowWidth, float currentWindowHeight)
@@ -155,8 +130,9 @@ Position StyleComputer::calculateDisplay(Element *element, float currentWindowWi
     }
     else
     {
-        float prevSiblingRight = prevSibling->computedStyle.x + prevSibling->computedStyle.width;
-        float prevSiblingBottom = prevSibling->computedStyle.y + prevSibling->computedStyle.height;
+        Element *closestToBottom = findPrevElementMostClosestToBottom(element);
+        float prevSiblingRight = closestToBottom->computedStyle.x + closestToBottom->computedStyle.width;   // prevSibling->computedStyle.x + prevSibling->computedStyle.width;
+        float prevSiblingBottom = closestToBottom->computedStyle.y + closestToBottom->computedStyle.height; // prevSibling->computedStyle.y + prevSibling->computedStyle.height;
 
         Element *prevSiblingBlock = findPrevElementWithDisplay(Display::BLOCK, element);
 

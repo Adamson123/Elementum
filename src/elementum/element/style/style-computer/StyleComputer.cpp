@@ -10,13 +10,6 @@ void StyleComputer::compute(Element *element, float currentWindowWidth, float cu
     computeBorderWidth(element);
 }
 
-// void StyleComputer::computeStartPosition(Element *element, float currentWindowWidth, float currentWindowHeight)
-// {
-//     Position pos = calculateStartPosition(element, currentWindowWidth, currentWindowHeight);
-//     element->computedStyle.x = pos.x;
-//     element->computedStyle.y = pos.y;
-// }
-
 void StyleComputer::computePosition(Element *element, float currentWindowWidth, float currentWindowHeight)
 {
     Position pos = calculatePosition(element, currentWindowWidth, currentWindowHeight);
