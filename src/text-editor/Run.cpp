@@ -15,7 +15,7 @@ void Elementum::Run()
 
     window->render(window->getWidth(), window->getHeight());
     Element *child = window->getChild(0);
-    child->setWidth(100, Unit::PERCENT);
+    // child->setWidth(100, Unit::PERCENT);
 
     child->onClick = [=]()
     {

@@ -57,11 +57,11 @@ void Element::render(float windowWidth, float windowHeight)
             if (layoutDirty)
             {
                 child->layoutDirty = true;
+                layoutDirty = false;
             }
             child->render(windowWidth, windowHeight);
         }
     }
-    layoutDirty = false;
 }
 
 void Element::addStyle(StyleDef &styleDef)
@@ -78,7 +78,9 @@ void Element::addChild(std::unique_ptr<Element> child)
     if (!children.empty())
     {
         child->prevSibling = children.back().get();
+        children.back()->nextSibling = child.get();
     }
+
     children.push_back(std::move(child));
 }
 

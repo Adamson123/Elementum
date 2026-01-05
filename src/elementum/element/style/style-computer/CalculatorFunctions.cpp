@@ -1,6 +1,8 @@
 #include "StyleComputer.hpp"
 #include "../../Element.hpp"
 #include <optional>
+#include <vector>
+#include <iostream>
 
 Position StyleComputer::calculatePosition(Element *element, float currentWindowWidth, float currentWindowHeight)
 {
@@ -108,6 +110,40 @@ Element *findPrevElementMostClosestToBottom(Element *element)
     return closest;
 }
 
+std::vector<Element *> findAllPrevElementInRow(Element *element)
+{
+    std::vector<Element *> elements;
+
+    for (Element *sibling = element; sibling != nullptr; sibling = sibling->prevSibling)
+    {
+        if (sibling->style.getDisplay() == Display::BLOCK)
+        {
+            break;
+        }
+
+        elements.push_back(sibling);
+    }
+
+    return elements;
+}
+
+Element *findElementWithGreatestY(std::vector<Element *> elements)
+{
+    Element *element;
+    float yP = -1.0f;
+
+    for (auto &e : elements)
+    {
+        if (e->getY() > yP)
+        {
+            yP = e->getY();
+            element = e;
+        }
+    }
+
+    return element;
+}
+
 Position StyleComputer::calculateDisplay(Element *element, float currentWindowWidth, float currentWindowHeight)
 {
     Element *parent = element->parent;
@@ -144,7 +180,28 @@ Position StyleComputer::calculateDisplay(Element *element, float currentWindowWi
             {
                 pos.x = elementX + prevSiblingRight;
                 // Element y should be relative to prev last block element bottom else to the parent y
-                pos.y = elementY + (prevSiblingBlock ? prevSiblingBlock->computedStyle.y + prevSiblingBlock->computedStyle.height : parentY);
+                pos.y = (prevSiblingBlock ? prevSiblingBlock->computedStyle.y + prevSiblingBlock->computedStyle.height : parentY); // elementGY->computedStyle.y; //
+
+                element->computedStyle.y = (prevSiblingBlock ? prevSiblingBlock->computedStyle.y + prevSiblingBlock->computedStyle.height : parentY);
+                std::vector<Element *> elements = findAllPrevElementInRow(element);
+                Element *elementGY = findElementWithGreatestY(elements);
+
+                if (elements.size())
+                {
+                    for (auto &e : elements)
+                    {
+                        SDL_Log("%s - %f <<< %f", e->className.c_str(), e->computedStyle.y, elementGY->computedStyle.y);
+                        e->computedStyle.y = elementGY->computedStyle.y;
+                        pos.y = elementGY->computedStyle.y;
+
+                        // e->setY(*elementGY->style.y, element->style.unit.y);
+                    }
+                }
+                /*
+                  .1 find all previous that are inline-block
+                  .2
+                */
+                // std::vector<Element *> elements = findAllPrevElementInRow(element);
             }
 
             // If prevSibling is block

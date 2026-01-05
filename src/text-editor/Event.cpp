@@ -13,7 +13,8 @@ void Elementum::Event(SDL_Event *event)
     }
 
     // Resize event
-    if (event->type == SDL_WINDOWEVENT && event->window.event == SDL_WINDOWEVENT_RESIZED)
+    // event->type == SDL_WINDOWEVENT &&
+    if (event->window.event == SDL_WINDOWEVENT_RESIZED)
     {
         float currentWindowWidth = event->window.data1;
         float currentWindowHeight = event->window.data2;
