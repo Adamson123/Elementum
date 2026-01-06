@@ -15,6 +15,8 @@ void Elementum::Init()
         {"backgroundColor", "20,20,20,255"},
         {"width", "70%"},
         {"height", "80%"},
+        {"margin", "10px"},
+
         // {"x", "10%"},
     };
 
@@ -25,22 +27,25 @@ void Elementum::Init()
 
     Style1["backgroundColor"] = "40,40,40,255";
     Style1["color"] = "222,55,0,255";
-    Style1["width"] = "150px";
-    Style1["height"] = "150px";
-    Style1["x"] = "20px";
-    Style1["y"] = "10px";
+    Style1["width"] = "30%";
+    Style1["height"] = "30%";
+    // Style1["x"] = "20px";
+    // Style1["y"] = "10px";
 
     auto element2 = window->createWidget();
     element2->className = "element2";
     element2->text = element2->className;
     element2->addStyle(Style1);
-    element2->setY(30.f);
+    element2->setHeight(33, Unit::PERCENT);
+
+    // element2->setY(30.f);
     // element2->setX(70, Unit::PERCENT);
 
     auto element3 = window->createWidget();
     element3->className = "element3";
     element3->text = element3->className;
     element3->addStyle(Style1);
+    element3->setMarginTop(5, Unit::PERCENT);
 
     // element3->setDisplay(Display::NONE);
 
@@ -55,13 +60,14 @@ void Elementum::Init()
     element5->className = "element5";
     element5->text = element5->className;
     element5->addStyle(Style1);
-    // element5->setY(10, Unit::PERCENT);
+    // element5->setDisplay(Display::BLOCK);
+    //  element5->setY(10, Unit::PERCENT);
 
     auto element6 = window->createWidget();
     element6->className = "element6";
     element6->text = element6->className;
     element6->addStyle(Style1);
-    element6->setY(20, Unit::PERCENT);
+    // element6->setY(20, Unit::PERCENT);
 
     // element4->setWidth(200.f);
     //  element4->setStartX(StartPosition::PARENT);

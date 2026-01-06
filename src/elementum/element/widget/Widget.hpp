@@ -11,8 +11,6 @@ class Window;
 class Widget : public Element
 {
 public:
-    Widget(float x, float y, float width, float height) : Element(x, y, width, height) {};
-
     Window *window = nullptr;
 
     // Determines whether the click event should propagate to parent elements

@@ -29,7 +29,7 @@ class StyleComputer;
 class Element
 {
 public:
-    Element(float x, float y, float width, float height);
+    // Element();
     virtual ~Element() = default;
 
     // Flags
@@ -104,12 +104,19 @@ public:
     // Style setters for element's style
     void setWidth(float value, Unit unit = Unit::PX);
     void setHeight(float value, Unit unit = Unit::PX);
-    void setX(float value, Unit unit = Unit::PX);
-    void setY(float value, Unit unit = Unit::PX);
+
+    void setMargin(float value, Unit unit = Unit::PX);
+    void setMarginLeft(float value, Unit unit = Unit::PX);
+    void setMarginRight(float value, Unit unit = Unit::PX);
+    void setMarginTop(float value, Unit unit = Unit::PX);
+    void setMarginBottom(float value, Unit unit = Unit::PX);
+
     void setBackgroundColor(SDL_Color color);
     void setBorderColor(SDL_Color color);
     void setColor(SDL_Color color);
+
     void setBorderWidth(float value, Unit unit = Unit::PX);
+
     void setFontSize(int size);
     void setFontFamily(const std::string &family);
     // void setStartX(StartPosition startX);

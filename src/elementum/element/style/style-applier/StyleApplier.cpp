@@ -121,17 +121,38 @@ StyleApplier::StyleApplier()
     };
 
     //
-    handlers["x"] = [](Element *element, const std::string &v)
+    handlers["margin"] = [](Element *element, const std::string &v)
     {
         auto parsed = parseValue(v);
-        element->setX(parsed.value, parsed.unit);
+        element->setMargin(parsed.value, parsed.unit);
     };
 
     //
-    handlers["y"] = [](Element *element, const std::string &v)
+    handlers["marginLeft"] = [](Element *element, const std::string &v)
     {
         auto parsed = parseValue(v);
-        element->setY(parsed.value, parsed.unit);
+        element->setMarginLeft(parsed.value, parsed.unit);
+    };
+
+    //
+    handlers["marginRight"] = [](Element *element, const std::string &v)
+    {
+        auto parsed = parseValue(v);
+        element->setMarginRight(parsed.value, parsed.unit);
+    };
+
+    //
+    handlers["marginTop"] = [](Element *element, const std::string &v)
+    {
+        auto parsed = parseValue(v);
+        element->setMarginTop(parsed.value, parsed.unit);
+    };
+
+    //
+    handlers["marginBottom"] = [](Element *element, const std::string &v)
+    {
+        auto parsed = parseValue(v);
+        element->setMarginBottom(parsed.value, parsed.unit);
     };
 
     //

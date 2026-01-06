@@ -4,75 +4,65 @@
 #include <vector>
 #include <iostream>
 
-Position StyleComputer::calculatePosition(Element *element, float currentWindowWidth, float currentWindowHeight)
+float computeAxis(Element *parent, std::optional<float> value, Unit unit, float parentSize, float windowSize)
 {
-    Element *parent = element->parent;
-
-    auto computeAxis = [&](std::optional<float> value, Unit unit, float parentSize, float windowSize) -> float
+    // If the unit is percent, calculate based on parent size or window size
+    // If the unit is px, return the value directly
+    if (unit == Unit::PERCENT)
     {
-        // If the unit is percent, calculate based on parent position and size or window size
-        // If the unit is px, add directly to parent position
-        if (unit == Unit::PERCENT)
-        {
-            if (parent)
-                return (value.value_or(0.f) / 100.f) * parentSize;
-            else
-                return (value.value_or(0.f) / 100.f) * windowSize;
-        }
-        else // px
-        {
-            return value.value_or(0.f);
-        }
-    };
-
-    float parentX = parent ? parent->computedStyle.x : 0.f;
-    float parentY = parent ? parent->computedStyle.y : 0.f;
-    float parentWidth = parent ? parent->computedStyle.width : currentWindowWidth;
-    float parentHeight = parent ? parent->computedStyle.height : currentWindowHeight;
-
-    // ComputedStartPos startPos = calculateStartPosition(element, currentWindowWidth, currentWindowHeight);
-
-    Position pos;
-    pos.x = computeAxis(element->style.x, element->style.unit.x, parentWidth, currentWindowWidth);
-    pos.y = computeAxis(element->style.y, element->style.unit.y, parentHeight, currentWindowHeight);
-    return pos;
-}
+        if (parent)
+            return (value.value_or(0.f) / 100) * parentSize;
+        else
+            return (value.value_or(0.f) / 100) * windowSize;
+    }
+    else
+    {
+        return value.value_or(0.f);
+    }
+};
 
 Size StyleComputer::calculateSize(Element *element, float currentWindowWidth, float currentWindowHeight)
 {
     Element *parent = element->parent;
 
-    auto computeAxis = [&](std::optional<float> value, Unit unit, float parentSize, float windowSize) -> float
-    {
-        // If the unit is percent, calculate based on parent size or window size
-        // If the unit is px, return the value directly
-        if (unit == Unit::PERCENT)
-        {
-            if (parent)
-                return (value.value_or(0.f) / 100) * parentSize;
-            else
-                return (value.value_or(0.f) / 100) * windowSize;
-        }
-        else
-        {
-            return value.value_or(0.f);
-        }
-    };
-
     float parentWidth = parent ? parent->computedStyle.width : currentWindowWidth;
     float parentHeight = parent ? parent->computedStyle.height : currentWindowHeight;
 
     Size size;
-    size.width = computeAxis(element->style.width, element->style.unit.width, parentWidth, currentWindowWidth);
-    size.height = computeAxis(element->style.height, element->style.unit.height, parentHeight, currentWindowHeight);
+    // Example:
+    // if width is 50% and parent width is 200px, then width = 50/100 * 200 = 100px;
+    size.width = computeAxis(parent, element->style.width, element->style.unit.width, parentWidth, currentWindowWidth);
+    size.height = computeAxis(parent, element->style.height, element->style.unit.height, parentHeight, currentWindowHeight);
+
     return size;
 }
 
-Element *findPrevElementWithDisplay(Display display, Element *element)
+//
+Margin StyleComputer::calculateMargin(Element *element, float currentWindowWidth, float currentWindowHeight)
+{
+
+    Element *parent = element->parent;
+    // Element *parent = element->parent;
+    float parentWidth = parent ? parent->computedStyle.width : currentWindowWidth;
+    float parentHeight = parent ? parent->computedStyle.height : currentWindowHeight;
+
+    Margin margin;
+    // Example:
+    // if margin left is 10% and parent width is 200px, then margin left = 10/100 * 200 = 20px;
+    margin.margin = computeAxis(parent, element->style.margin, element->style.unit.margin, parentWidth, currentWindowWidth);
+    margin.marginLeft = element->style.marginLeft.has_value() ? computeAxis(parent, element->style.marginLeft, element->style.unit.marginLeft, parentWidth, currentWindowWidth) : margin.margin;
+    margin.marginRight = element->style.marginRight.has_value() ? computeAxis(parent, element->style.marginRight, element->style.unit.marginRight, parentWidth, currentWindowWidth) : margin.margin;
+    margin.marginTop = element->style.marginTop.has_value() ? computeAxis(parent, element->style.marginTop, element->style.unit.marginTop, parentHeight, currentWindowHeight) : margin.margin;
+    margin.marginBottom = element->style.marginBottom.has_value() ? computeAxis(parent, element->style.marginBottom, element->style.unit.marginBottom, parentHeight, currentWindowHeight) : margin.margin;
+
+    return margin;
+}
+
+Element *StyleComputer::findVisiblePrevElement(Element *element)
 {
     for (Element *sibling = element->prevSibling; sibling != nullptr; sibling = sibling->prevSibling)
     {
-        if (sibling->style.getDisplay() == display)
+        if (sibling->style.getDisplay() != Display::NONE)
         {
             return sibling;
         }
@@ -80,155 +70,115 @@ Element *findPrevElementWithDisplay(Display display, Element *element)
     return nullptr;
 }
 
-Element *findPrevElementThatIsNotWithDisplay(Display display, Element *element)
+// RULE: if we are adding previuos element computed position, we do not add parent position again.
+void StyleComputer::handleInlineBlock(Element *element, Element *visiblePrevElement, Position &pos)
 {
-    for (Element *sibling = element->prevSibling; sibling != nullptr; sibling = sibling->prevSibling)
-    {
-        if (sibling->style.getDisplay() != display)
-        {
-            return sibling;
-        }
-    }
-    return nullptr;
-}
+    Element *parent = element->parent;
+    float parentY = parent ? parent->computedStyle.y : 0.0f;
+    float parentX = parent ? parent->computedStyle.x : 0.0f;
 
-Element *findPrevElementMostClosestToBottom(Element *element)
-{
-    Element *closest = nullptr;
-    float closestBottom = -1.0f;
-
-    for (Element *sibling = element->prevSibling; sibling != nullptr; sibling = sibling->prevSibling)
+    if (!visiblePrevElement)
     {
-        float siblingBottom = sibling->getY() + sibling->getHeight();
-        if (siblingBottom > closestBottom)
-        {
-            closestBottom = siblingBottom;
-            closest = sibling;
-        }
+        // If there's no visible previous element, position relative to parent plus margin
+        pos.x = parentX + element->computedStyle.marginLeft;
+        pos.y = parentY + element->computedStyle.marginTop;
+        return;
     }
 
-    return closest;
+    if (visiblePrevElement->style.display == Display::BLOCK)
+    {
+
+        pos.x = parentX + element->computedStyle.marginLeft;
+        /* Position below the previous block element, by adding the previous element's height + bottom margin + top margin of the current element */
+        pos.y = visiblePrevElement->computedStyle.y + visiblePrevElement->computedStyle.height + visiblePrevElement->computedStyle.marginBottom + element->computedStyle.marginTop;
+    }
+
+    if (visiblePrevElement->style.display == Display::INLINE_BLOCK)
+    {
+        /* Position to the right of the previous inline-block element, by adding the previous element's width + right margin + left margin of the current element */
+        pos.x = visiblePrevElement->computedStyle.x + visiblePrevElement->computedStyle.width + visiblePrevElement->computedStyle.marginRight + element->computedStyle.marginLeft;
+        /* Position aligned vertically with the previous inline-block element, remove the top margin of the previous element and add the top margin of the current element */
+        pos.y = (visiblePrevElement->computedStyle.y - visiblePrevElement->computedStyle.marginTop) + element->computedStyle.marginTop;
+    }
 }
 
-std::vector<Element *> findAllPrevElementInRow(Element *element)
+Element *findPrevElementWithLargestHeight(Element *element)
 {
-    std::vector<Element *> elements;
 
-    for (Element *sibling = element; sibling != nullptr; sibling = sibling->prevSibling)
+    if (element->prevSibling->style.getDisplay() == Display::BLOCK)
     {
+        return element->prevSibling;
+    }
+
+    Element *parent = element->parent;
+    float largestHeight = 0.0f;
+    Element *targetElement = nullptr;
+
+    for (Element *sibling = element->prevSibling; sibling != nullptr; sibling = sibling->prevSibling)
+    {
+
+        if (sibling->style.getDisplay() == Display::INLINE_BLOCK)
+        {
+            if (sibling->getHeight() > largestHeight)
+            {
+                largestHeight = sibling->getHeight();
+                targetElement = sibling;
+            }
+        }
+
         if (sibling->style.getDisplay() == Display::BLOCK)
         {
             break;
         }
-
-        elements.push_back(sibling);
     }
 
-    return elements;
+    return targetElement;
 }
 
-Element *findElementWithGreatestY(std::vector<Element *> elements)
+void StyleComputer::handleBlock(Element *element, Element *visiblePrevElement, Position &pos)
 {
-    Element *element;
-    float yP = -1.0f;
+    Element *parent = element->parent;
+    float parentY = parent ? parent->computedStyle.y : 0.0f;
+    float parentX = parent ? parent->computedStyle.x : 0.0f;
 
-    for (auto &e : elements)
+    if (!visiblePrevElement)
     {
-        if (e->getY() > yP)
-        {
-            yP = e->getY();
-            element = e;
-        }
+        // If there's no visible previous element, position relative to parent plus margin
+        pos.x = parentX + element->computedStyle.marginLeft;
+        pos.y = parentY + element->computedStyle.marginTop;
     }
 
-    return element;
+    if (visiblePrevElement)
+    {
+
+        pos.x = parentX + element->computedStyle.marginLeft;
+        /*
+             if previous element is block we will just use it
+             Else if it's inline-block we will find the prev element with the largest height until we get to a block element
+             */
+        Element *targetElement = findPrevElementWithLargestHeight(element);
+        // if (targetElement)
+        pos.y = targetElement->computedStyle.y + targetElement->computedStyle.height + targetElement->computedStyle.marginBottom + element->computedStyle.marginTop;
+        // else
+        //     pos.y = visiblePrevElement->computedStyle.y + visiblePrevElement->computedStyle.height + visiblePrevElement->computedStyle.marginBottom + element->computedStyle.marginTop;
+    }
 }
 
 Position StyleComputer::calculateDisplay(Element *element, float currentWindowWidth, float currentWindowHeight)
 {
     Element *parent = element->parent;
-    Element *prevSibling = findPrevElementThatIsNotWithDisplay(Display::NONE, element); // element->prevSibling;
+    Element *visiblePrevElement = findVisiblePrevElement(element);
 
-    Display display = element->style.display;
     Position pos;
 
-    float parentX = parent ? parent->computedStyle.x : 0;
-    float parentY = parent ? parent->computedStyle.y : 0;
-
-    float elementX = element->computedStyle.x;
-    float elementY = element->computedStyle.y;
-
-    // If no prevSibling, let start position default to parent
-    if (!prevSibling)
+    // TODO: Or if parent is flex
+    if (element->style.display == Display::INLINE_BLOCK)
     {
-        pos.x = elementX + parentX;
-        pos.y = elementY + parentY;
+        handleInlineBlock(element, visiblePrevElement, pos);
     }
-    else
+    else if (element->style.display == Display::BLOCK)
     {
-        Element *closestToBottom = findPrevElementMostClosestToBottom(element);
-        float prevSiblingRight = closestToBottom->computedStyle.x + closestToBottom->computedStyle.width;   // prevSibling->computedStyle.x + prevSibling->computedStyle.width;
-        float prevSiblingBottom = closestToBottom->computedStyle.y + closestToBottom->computedStyle.height; // prevSibling->computedStyle.y + prevSibling->computedStyle.height;
-
-        Element *prevSiblingBlock = findPrevElementWithDisplay(Display::BLOCK, element);
-
-        // DISPLAY, INLINE_BLOCK
-        if (display == Display::INLINE_BLOCK)
-        {
-            // If prevSibling is inline block
-            if (prevSibling->style.display == Display::INLINE_BLOCK)
-            {
-                pos.x = elementX + prevSiblingRight;
-                // Element y should be relative to prev last block element bottom else to the parent y
-                pos.y = (prevSiblingBlock ? prevSiblingBlock->computedStyle.y + prevSiblingBlock->computedStyle.height : parentY); // elementGY->computedStyle.y; //
-
-                element->computedStyle.y = (prevSiblingBlock ? prevSiblingBlock->computedStyle.y + prevSiblingBlock->computedStyle.height : parentY);
-                std::vector<Element *> elements = findAllPrevElementInRow(element);
-                Element *elementGY = findElementWithGreatestY(elements);
-
-                if (elements.size())
-                {
-                    for (auto &e : elements)
-                    {
-                        SDL_Log("%s - %f <<< %f", e->className.c_str(), e->computedStyle.y, elementGY->computedStyle.y);
-                        e->computedStyle.y = elementGY->computedStyle.y;
-                        pos.y = elementGY->computedStyle.y;
-
-                        // e->setY(*elementGY->style.y, element->style.unit.y);
-                    }
-                }
-                /*
-                  .1 find all previous that are inline-block
-                  .2
-                */
-                // std::vector<Element *> elements = findAllPrevElementInRow(element);
-            }
-
-            // If prevSibling is block
-            if (prevSibling->style.display == Display::BLOCK)
-            {
-                pos.x = elementX + parentX;
-                pos.y = elementY + prevSiblingBottom;
-            }
-        }
-
-        // DISPLAY, BLOCK
-        if (display == Display::BLOCK)
-        {
-            if (!element->style.width.has_value())
-                element->computedStyle.width = parent ? (parent->computedStyle.width - elementX) : (currentWindowWidth - elementX);
-
-            pos.x = elementX + parentX;
-            pos.y = elementY + prevSiblingBottom;
-            // element->computedStyle.width = parent ? parent->computedStyle.width : currentWindowWidth;
-            // element->computedStyle.width = currentWindowWidth - (pos.x - parentX);
-        }
-
-        // DISPLAY, NONE
-        // if (display == Display::NONE)
-        // {
-        //     return pos;
-        // }
+        handleBlock(element, visiblePrevElement, pos);
     }
 
     return pos;

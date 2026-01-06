@@ -34,8 +34,13 @@ struct Units
 {
     Unit width = Unit::PX;
     Unit height = Unit::PX;
-    Unit x = Unit::PX;
-    Unit y = Unit::PX;
+    // Unit x = Unit::PX;
+    // Unit y = Unit::PX;
+    Unit margin = Unit::PX;
+    Unit marginLeft = Unit::PX;
+    Unit marginRight = Unit::PX;
+    Unit marginTop = Unit::PX;
+    Unit marginBottom = Unit::PX;
     Unit borderWidth = Unit::PX;
 };
 
@@ -53,8 +58,11 @@ private:
     int zIndex = 0;
 
     std::optional<float>
-        x,
-        y,
+        margin,
+        marginLeft,
+        marginRight,
+        marginTop,
+        marginBottom,
         width,
         height,
         borderWidth = NULL;
@@ -83,8 +91,13 @@ public:
 
     std::optional<float> getWidth() const { return width; }
     std::optional<float> getHeight() const { return height; }
-    std::optional<float> getX() const { return x; }
-    std::optional<float> getY() const { return y; }
+
+    std::optional<float> getMargin() const { return margin; }
+    std::optional<float> getMarginLeft() const { return marginLeft; }
+    std::optional<float> getMarginRight() const { return marginRight; }
+    std::optional<float> getMarginTop() const { return marginTop; }
+    std::optional<float> getMarginBottom() const { return marginBottom; }
+
     std::optional<float> getBorderWidth() const { return borderWidth; }
     int getFontSize() const { return fontSize; }
 

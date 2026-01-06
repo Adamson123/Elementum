@@ -4,11 +4,19 @@
 #include "../Element.hpp"
 #include "../widget/Widget.hpp"
 
-Window::Window(float x, float y, float width, float height) : Element(x, y, width, height) {}
-
-std::unique_ptr<Widget> Window::createWidget(float x, float y, float width, float height)
+Window::Window(float width, float height)
 {
-    auto widget = std::make_unique<Widget>(x, y, width, height);
+    // style.x = x;
+    // style.y = y;
+    // computedStyle.x = x;
+    // computedStyle.y = y;
+    style.width = width;
+    style.height = height;
+}
+
+std::unique_ptr<Widget> Window::createWidget()
+{
+    auto widget = std::make_unique<Widget>();
 
     widget->window = this;
     widget->styleApplier = styleApplier;

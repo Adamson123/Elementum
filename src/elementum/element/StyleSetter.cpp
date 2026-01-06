@@ -17,18 +17,39 @@ void Element::setHeight(float value, Unit unit)
     // paintDirty = true;
 }
 
-void Element::setX(float value, Unit unit)
+void Element::setMargin(float value, Unit unit)
 {
-    style.x = value;
-    style.unit.x = unit;
+    style.margin = value;
+    style.unit.margin = unit;
     layoutDirty = true;
     // paintDirty = true;
 }
 
-void Element::setY(float value, Unit unit)
+void Element::setMarginLeft(float value, Unit unit)
 {
-    style.y = value;
-    style.unit.y = unit;
+    style.marginLeft = value;
+    style.unit.marginLeft = unit;
+    layoutDirty = true;
+    // paintDirty = true;
+}
+void Element::setMarginRight(float value, Unit unit)
+{
+    style.marginRight = value;
+    style.unit.marginRight = unit;
+    layoutDirty = true;
+    // paintDirty = true;
+}
+void Element::setMarginTop(float value, Unit unit)
+{
+    style.marginTop = value;
+    style.unit.marginTop = unit;
+    layoutDirty = true;
+}
+
+void Element::setMarginBottom(float value, Unit unit)
+{
+    style.marginBottom = value;
+    style.unit.marginBottom = unit;
     layoutDirty = true;
     // paintDirty = true;
 }

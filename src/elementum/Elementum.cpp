@@ -8,7 +8,7 @@
 Elementum::~Elementum() = default;
 Elementum::Elementum(float windowWidth, float windowHeight, SDL_Renderer *renderer) : windowHeight(windowHeight), windowWidth(windowWidth)
 {
-    window = std::make_unique<Window>(0, 0, windowWidth, windowHeight);
+    window = std::make_unique<Window>(windowWidth, windowHeight);
     fontManager = std::make_unique<FontManager>();
     styleApplier = std::make_unique<StyleApplier>();
     painter = std::make_unique<Painter>();

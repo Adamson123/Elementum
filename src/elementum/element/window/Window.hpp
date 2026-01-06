@@ -11,13 +11,13 @@ class Widget;
 class Window : public Element
 {
 public:
-    Window(float x, float y, float width, float height);
+    Window(float width, float height);
 
     // Pointer to the element that was clicked within the window
     Element *clickedElement = nullptr;
 
     /** Creates a new Widget as a child of the Window */
-    std::unique_ptr<Widget> createWidget(float x = 0, float y = 0, float width = 0, float height = 0);
+    std::unique_ptr<Widget> createWidget();
 
     // TODO:
     /** Handles a click event within the window at the specified coordinates */

@@ -7,13 +7,13 @@
 #include "./painter/Painter.hpp"
 #include "./style/style-computer/StyleComputer.hpp"
 
-Element::Element(float x, float y, float width, float height)
-{
-    style.x = x;
-    style.y = y;
-    style.width = width;
-    style.height = height;
-};
+// Element::Element(float x, float y, float width, float height)
+// {
+//     style.x = x;
+//     style.y = y;
+//     style.width = width;
+//     style.height = height;
+// };
 
 std::vector<Element *> Element::getSortedChildren()
 {
@@ -57,11 +57,12 @@ void Element::render(float windowWidth, float windowHeight)
             if (layoutDirty)
             {
                 child->layoutDirty = true;
-                layoutDirty = false;
             }
+
             child->render(windowWidth, windowHeight);
         }
     }
+    layoutDirty = false;
 }
 
 void Element::addStyle(StyleDef &styleDef)
